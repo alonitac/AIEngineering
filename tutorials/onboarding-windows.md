@@ -65,9 +65,3 @@ As a Windows user, install VS Code on the Windows side (not inside WSL).
 
 Tip: Turn on Auto Save from File -> Auto Save.
 
-
-## What's next?
-
-Bravo.
-
-You can start your first task by clicking the Start Task on GitHub button on the first task in the Tasks page.
