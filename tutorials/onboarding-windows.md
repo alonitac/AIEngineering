@@ -61,14 +61,7 @@ As a Windows user, install VS Code on the Windows side (not inside WSL).
    https://code.visualstudio.com/Download
 2. Install the Remote - WSL extension:
    `vscode:extension/ms-vscode-remote.remote-wsl`
-3. Open a fresh terminal in WSL and navigate to your Yolo project directory.
-4. Launch VS Code in that directory:
 
-   ```bash
-   code .
-   ```
-
-VS Code will open the YoloService project and automatically connect to WSL.
 
 Tip: Turn on Auto Save from File -> Auto Save.
 

@@ -41,16 +41,8 @@ You are free to use any IDE you like, but we recommend VS Code.
 
 VS Code is lightweight, fast, and works well on Linux, Windows, and macOS.
 
-1. Download and install VS Code:
+Download and install VS Code:
    https://code.visualstudio.com/Download
-2. Navigate to your Yolo project directory.
-3. Launch VS Code in that directory:
-
-   ```bash
-   code .
-   ```
-
-This opens the YoloService project in VS Code.
 
 Tip: Turn on Auto Save from File -> Auto Save.
 
