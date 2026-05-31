@@ -39,7 +39,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td>1</td>
  <td>Intro to DevOps</td>
  <td>What is DevOps? (slides)</td>
- <td align="center"></td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/slides/whatisdevops.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/slides.png" /></a></td>
  <td>&nbsp;</td>
  <td>&nbsp;</td>
  <td>&nbsp;</td>
@@ -50,7 +50,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 <tr>
  <td>2</td>
  <td>Python</td>
- <td>Unittesting in Python</td>
+ <td><a target="_blank" href="tutorials/python_intro.md">Python development environment</a></td>
  <td align="center"></td>
  <td align="center"></td>
  <td align="center"></td>
@@ -59,79 +59,27 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 </tr>
 
 <tr>
- <td>3</td>
- <td>Linux and Bash</td>
- <td>Linux intro</td>
+ <td>2</td>
+ <td>Networking</td>
+ <td><a target="_blank" href="tutorials/http_protocol.md">HTTP protocol</a></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"></td>
- <td align="center">&nbsp;</td>
-
-<td align="center"></td>
-</tr>
-
-
-<tr>
- <td>4</td>
- <td>Linux and Bash</td>
- <td>Linux file management</td>
+ <td align="center"><a href="tutorials/http_protocol.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"></td>
- <td align="center">&nbsp;</td>
- <td align="center">&nbsp;</td>
-
-</tr>
-
-
-<tr>
- <td>5</td>
- <td>Linux and Bash</td>
- <td>IO redirection</td>
- <td align="center">&nbsp;</td>
- <td align="center"></td>
- <td align="center"></td>
- <td align="center"></td>
- <td align="center">&nbsp;</td>
-
-</tr>
-
-
-
-<tr>
- <td>6</td>
- <td>Linux and Bash</td>
- <td>Processes</td>
- <td align="center"></td>
- <td align="center"></td>
- <td align="center"></td>
- <td align="center"></td>
- <td align="center"></td>
-
 </tr>
 
 <tr>
- <td>7</td>
- <td>Linux and Bash</td>
- <td>Environment variables</td>
- <td align="center">&nbsp;</td>
+ <td>2</td>
+ <td>Python</td>
+ <td><a target="_blank" href="tutorials/python_unittesting.md">Unittesting in Python</a></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center">&nbsp;</td>
- <td align="center">&nbsp;</td>
-
+ <td align="center"></td>
+ <td align="center"><a href="https://github.com/alonitac/PythonKatasFursa.git">Python Katas</a></td>
+ <td align="center"></td>
 </tr>
 
-<tr>
- <td>8</td>
- <td>Linux and Bash</td>
- <td>Package management</td>
- <td align="center">&nbsp;</td>
- <td align="center"></td>
- <td align="center"></td>
- <td align="center">&nbsp;</td>
- <td align="center">&nbsp;</td>
-</tr>
 
 
 </table>
