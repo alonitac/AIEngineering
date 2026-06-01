@@ -59,7 +59,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 </tr>
 
 <tr>
- <td>2</td>
+ <td>3</td>
  <td>Networking</td>
  <td><a target="_blank" href="tutorials/http_protocol.md">HTTP protocol</a></td>
  <td align="center"></td>
@@ -70,7 +70,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 </tr>
 
 <tr>
- <td>2</td>
+ <td>4</td>
  <td>Python</td>
  <td><a target="_blank" href="tutorials/python_unittesting.md">Unittesting in Python</a></td>
  <td align="center"></td>
