@@ -29,7 +29,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 ## Studying Guide
 
 <table width="100%">
-<tr><th>#</th><th>Topic</th><th>Tutorial</th><th colspan="3">&nbsp;&nbsp;&nbsp;Resources&nbsp;&nbsp;&nbsp;</th><th>Tasks</th><th>Recording</th></tr>
+<tr><th>#</th><th>Topic</th><th>Tutorial</th><th colspan="3">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th><th>Resources</th><th>Recording</th></tr>
 
 <tr>
  <td align="center" colspan="8"><br><b>Intro to DevOps</b><br><br></td>
@@ -54,7 +54,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://github.com/alonitac/PolyAIFursa">PolyAI Repository</a></td>
  <td align="center"></td>
 </tr>
 
