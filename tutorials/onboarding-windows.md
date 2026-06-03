@@ -61,6 +61,13 @@ As a Windows user, install VS Code on the Windows side (not inside WSL).
    https://code.visualstudio.com/Download
 2. Install the Remote - WSL extension:
    `vscode:extension/ms-vscode-remote.remote-wsl`
+3. Install the Python extension:
+   `vscode:extension/ms-python.python`
+4. Install the Python Debugger extension:
+   `vscode:extension/ms-python.debugpy`
+5. Set WSL (Ubuntu) as your default terminal profile in VS Code:
+   - Open Command Palette (`Ctrl+Shift+P`), run `Terminal: Select Default Profile`, and choose `WSL` or `Ubuntu (WSL)`.
+   - Open a new terminal in VS Code and verify it opens in your Ubuntu/WSL shell.
 
 
 Tip: Turn on Auto Save from File -> Auto Save.
