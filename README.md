@@ -80,6 +80,16 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"></td>
 </tr>
 
+<tr>
+ <td>5</td>
+ <td>CI/CD</td>
+ <td><a target="_blank" href="tutorials/github_actions.md">CI with GitHub Actions</a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"><a href="tasks/t001_yolo_api_testing.md">Task T001: YOLO API Testing</a></td>
+ <td align="center"></td>
+</tr>
 
 
 </table>
