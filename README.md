@@ -63,7 +63,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td>Networking</td>
  <td><a target="_blank" href="tutorials/http_protocol.md">HTTP protocol</a></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/http_and_api.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/http_protocol.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
  <td align="center"></td>
  <td align="center"></td>
