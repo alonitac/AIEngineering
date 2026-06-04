@@ -92,6 +92,29 @@ Each endpoint would have a unique URL and a specific set of input parameters and
 
 Many platforms expose both API, and GUI. Like Spotify, OpenAI and GitHub.
 
+#### REST API
+
+**REST (Representational State Transfer)** is an architectural style for designing APIs.
+A REST API uses standard HTTP methods (`GET`, `POST`, `PUT`, `DELETE`) to perform operations on resources, which are identified by URLs.
+Key principles include statelessness (each request contains all information needed to process it), a uniform interface, and representation of resources as JSON or XML.
+
+For example, a RESTful endpoint to retrieve a user might look like:
+
+```
+GET /users/42
+```
+
+And to create a new user:
+
+```
+POST /users
+Content-Type: application/json
+
+{"name": "Alice", "email": "alice@example.com"}
+```
+
+For a deeper dive, see the [restapitutorial.com](https://www.restapitutorial.com/introduction/restconstraints).
+
 ## Introducing Postman
 
 Postman is a powerful and user-friendly tool for testing, debugging, and documenting APIs.    
