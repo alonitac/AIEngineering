@@ -43,7 +43,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td>&nbsp;</td>
  <td>&nbsp;</td>
  <td>&nbsp;</td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1Bws4lXDpRibT1lO4ljAn2dSp3kbMpKrB/view?usp=sharing">2026-06-01</a></td>
 
 </tr>	
 
@@ -66,7 +66,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/http_and_api.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/http_protocol.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1I1Z3dR2wFk6EJuI8kk2x6DUa57WPTkg8/view?usp=sharing">2026-06-04</a></td>
 </tr>
 
 <tr>
