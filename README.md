@@ -92,4 +92,80 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 </tr>
 
 
+<tr>
+ <td>6</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/linux_intro.md">Linux intro</a></td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/slides/linux_intro.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/slides.png" /></a></td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/multichoice-questions/linux_intro.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/linux_intro.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
+ <td align="center">&nbsp;</td>
+
+<td align="center"></td>
+</tr>
+
+
+<tr>
+ <td>7</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/linux_file_management.md">Linux file management</a></td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/slides/linux_storage_layout.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/slides.png" /></a></td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/multichoice-questions/linux_file_management.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/linux_file_management.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
+ <td align="center">&nbsp;</td>
+ <td align="center">&nbsp;</td>
+
+</tr>
+
+
+<tr>
+ <td>8</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/linux_io_redirection.md">IO redirection</a></td>
+ <td align="center">&nbsp;</td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/multichoice-questions/linux_io_redirection.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/linux_io_redirection.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center">&nbsp;</td>
+
+</tr>
+
+
+
+<tr>
+ <td>9</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/linux_processes.md">Processes</a></td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/slides/linux_processes.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/slides.png" /></a></td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/multichoice-questions/linux_processes.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/linux_processes.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
+ <td align="center"><a href="https://github.com/alonitac/PolybotServicePythonFursa.git">The Polybot Service task</a></td>
+ <td align="center"></td>
+
+</tr>
+
+<tr>
+ <td>10</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/linux_environment_variables.md">Environment variables</a></td>
+ <td align="center">&nbsp;</td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/multichoice-questions/linux_environment_variables.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/linux_environment_variables.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
+ <td align="center">&nbsp;</td>
+ <td align="center">&nbsp;</td>
+
+</tr>
+
+<tr>
+ <td>11</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/linux_package_management.md">Package management</a></td>
+ <td align="center">&nbsp;</td>
+ <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/multichoice-questions/linux_package_management.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/linux_package_management.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
+ <td align="center">&nbsp;</td>
+ <td align="center">&nbsp;</td>
+</tr>
+
+
 </table>
