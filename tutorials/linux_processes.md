@@ -111,191 +111,115 @@ We now demonstrate a very important concept called **Graceful Termination**.
 
 Graceful termination refers to the process of shutting down a program (a process) in a way that allows it to complete its current tasks and close down all processes in a safe and controlled manner. This ensures that no data is lost, and all system resources are properly released.
 
-In our course repo, under `simple_python_server/app.py` you are given a simple Python server based on the [Flask package](https://flask.palletsprojects.com/en/3.0.x/).
+Let's implement a graceful termination logic for the Yolo app.
 
-First, let's install the Flask package as our server depends on that app. 
-Open up a terminal session from your IDE (e.g. PyCharm) and perform: 
+Add the following to `app.py`:
 
-```bash
-pip install flask
+```python
+import signal
+import sys
+
+is_shutting_down = False
+
+def handle_sigterm(signum, frame):
+    global is_shutting_down
+    is_shutting_down = True
+    logging.info("Received SIGTERM. Shutting down gracefully...")
+    # Perform cleanup: close DB connections, finish pending work, etc.
+    logging.info("Cleanup done. Exiting.")
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, handle_sigterm)
 ```
 
-Run the server by executing the below command from the `simple_python_server` dir:
+And add a `/ready` endpoint that returns an error while the app is shutting down:
 
-```bash
-cd simple_python_server
-python app.py
+```python
+@app.get("/ready")
+def ready():
+    if is_shutting_down:
+        raise HTTPException(status_code=503, detail="Service is shutting down")
+    return {"status": "ready"}
 ```
 
-Obviously, we can send SIGKILL (9) to the server and kill it aggressively. But we want the server to be terminated gracefully. To do so, we will first send SIGTERM, which indicates to the server "you are going to be terminated soon, so take some **grace period** to terminate yourself gracefully".
+When the process receives `SIGTERM`, Python invokes `handle_sigterm` instead of terminating immediately. The `is_shutting_down` flag is set to `True` first, so any new requests to `/ready` immediately get a `503` response - signalling to load balancers or orchestrators (like Kubernetes) to stop routing traffic to this instance. The app then performs cleanup and exits cleanly.
 
-The server is finishing the process clients requests, closes the connection to the database, and performs some cleanup tasks. Finally, the server terminates itself, while everything is healthy.
+With this in place, send `SIGTERM` to the running server process:
+
+```console
+myuser@hostname:~$ kill -15 <PID>
+```
+
+Quickly call `/ready` right after - you should get a `503`. Compare this to sending `SIGKILL` (`kill -9`), which terminates the process immediately - the handler is never called and no cleanup runs.
 
 ## Services
 
+In Linux, **services** are background processes that run continuously and provide specific functions to the OS or other applications - `ssh`, `cron`, `ufw`, and `apache` are common examples.
 
-In Linux, services are **background processes** that run continuously and provide specific functions to the operating system or other applications. Here are some common Linux services:
+Services are managed by **systemd**, the first process started by the kernel (PID 1). Systemd reads **unit files** - plain-text configuration files that describe how to start, stop, and restart a process. Unit files live in `/etc/systemd/system/`.
 
-1. `ssh`: A secure remote login protocol that allows users to log in to a remote computer securely.
-2. `cron`: A service that executes scheduled tasks or commands at specified intervals.
-3. `ufw`: An easy-to-use interface for configuring and managing firewall rules on a Linux system.
-4. `apache`: A web server that serves HTML pages and other files over the internet.
-
-The `systemctl` command is used to manage services in your system:
+Use `systemctl` to manage services:
 
 ```console
 myuser@hostname:~$ sudo systemctl status ufw
-● ufw.service - Uncomplicated firewall
-Loaded: loaded (/lib/systemd/system/ufw.service; enabled; vendor preset: enabled)
-Active: active (exited) since Sun 2022-01-01 07:25:58 UTC; 2h 16min ago
-Docs: man:ufw(8)
-Main PID: 338 (code=exited, status=0/SUCCESS)
-CPU: 1ms
-
-Jan 01 07:25:58 hostname systemd[1]: Starting Uncomplicated firewall...
-Jan 01 07:25:58 hostname systemd[1]: Finished Uncomplicated firewall.
-myuser@hostname:~$ sudo systemctl stop ufw
 myuser@hostname:~$ sudo systemctl start ufw
-myuser@hostname:~$ sudo systemctl restart <service name>
+myuser@hostname:~$ sudo systemctl stop ufw
+myuser@hostname:~$ sudo systemctl restart ufw
+myuser@hostname:~$ sudo systemctl enable ufw   # start automatically on boot
 ```
 
-Enable a service to start automatically at boot time by:
-
-```console
-sudo systemctl enable <service name>
-```
-
-### Who manages Linux services?
- 
-As can be seen in the output of `pstree`, **systemd** is the first process in many Linux distributions, which is a system and service manager that provides a way to manage and control system services. Systemd reads **unit files**, which are configuration files used by systemd to define system services.
-
-Unit files can be found in the `/etc/systemd/system` directory:
-
-```console
-myuser@hostname:~$ ls  /etc/systemd/system/*.service
-/etc/systemd/system/sshd.service
-/etc/systemd/system/mysql.service
-/etc/systemd/system/jenkins.service
-...
-```
-
-List all your system services:
+List all services:
 
 ```console
 myuser@hostname:~$ systemctl list-units --type=service
-UNIT                                              LOAD   ACTIVE SUB     DESCRIPTION                
-accounts-daemon.service                          loaded active running Accounts Service           
-acpid.service                                    loaded active running ACPI event daemon          
-alsa-restore.service                             loaded active exited  Save/Restore Sound Card
-....
 ```
-
-In the above output, UNIT represents the unit name, LOAD indicates that the unit's configuration has been read by systemd, ACTIVE is the state of the unit.
 
 # Exercises
 
-### :pencil2: Explore services
+### :pencil2: Run the YOLO app as a Linux service
 
-1. How many days is the `systemd-resolved` service running?
-2. Is `ufw` service active in your system? Is it running? If not, what is the exit code of the process that runs the service?
-3. What is the PID of the `systemd-timesyncd` service? Restart the service, what is the PID? What is this service responsible for?
-4. Check the status of service `ssh`. Send `SIGKILL` to the process ID of this service. What happened to the service? Check the status, what is the status, why?
+In this exercise you will register the YOLO detection app as a systemd service.
 
-### :pencil2: Run the `simple_python_server` as a linux service
-
-In this exercise you'll be followed step by step on how to run the `simple_python_server` as a Linux service. 
-
-1. Create an empty dir in your home dir to store the app source code: `mkdir ~/simple_python_server`. 
-2. Create and activate a [Python virtual env (venv)](https://docs.python.org/3/library/venv.html) within the app directory:
-   ```bash
-   cd ~/simple_python_server
-   python -m venv .venv
-   ```
-   
-   Then activate the venv by: `source .venv/bin/activate`.
-   You can verify that your venv is activated by running `which python` and ensuring it points to the virtual environment's `bin` directory.
-
-3. Copy the app source code from `simple_python_server/` dir in our course repo, into `~/simple_python_server`. 
-4. From the terminal in which the venv is activated, install the `flask` Python package by: `pip install flask`. 
-5. Under `/etc/systemd/system/simplepy.service`, create a unit file as follows:
+1. Create a unit file at `/etc/systemd/system/yolo.service`:
 
 ```text
 [Unit]
-Description=Simple Python Server
+Description=YOLO Detection App
 After=network.target
 
 [Service]
-WorkingDirectory=/path/to/your/simple_python_server
-ExecStart=/path/to/your/simple_python_server/venv/bin/python /path/to/your/simple_python_server/app.py
-Restart=always
+WorkingDirectory=/path/to/your/yolo/app
+ExecStart=/path/to/your/.venv/bin/python app.py
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
 ```
 
-- `WorkingDirectory`: Specify the path to your Flask app directory.
-- `ExecStart`: Define the command to start your Flask app.
-- `WantedBy`: Indicates system to be fully functional for multiple users without a GUI
+- `WorkingDirectory` - the directory containing `app.py`.
+- `ExecStart` - the full path to the Python interpreter inside your venv, followed by `app.py`.
+- `Restart=on-failure` - systemd automatically restarts the process if it crashes.
 
-Adjust paths according to your specific setup. This `.service` file will enable systemd to manage your Flask application as a service on your Linux system.
+Adjust the paths to match your setup.
 
-6. Reload systemd configuration: `sudo systemctl daemon-reload`.
-7. Enable the service to start on boot: `sudo systemctl enable simplepy.service`
-8. Start the service: `sudo systemctl start simplepy.service`.
-9. Check the service status: `sudo systemctl status simplepy.service`.
-10. Check the service logs (if needed): `journalctl -u simplepy.service`.
+2. Reload systemd so it picks up the new file:
+   ```bash
+   sudo systemctl daemon-reload
+   ```
+3. Start the service: `sudo systemctl start yolo.service`
+4. Check its status: `sudo systemctl status yolo.service`
+5. View live logs: `journalctl -fu yolo.service`
+6. Send `SIGTERM` to the service process and observe the graceful shutdown logs: `sudo systemctl stop yolo.service`
 
-### :pencil2: Resource lock and process state
+**Important - clean up when done.**  
+Now that you've seen how it works, stop and remove the service. Leaving it running will conflict with the app when you run it manually during development:
 
-**Resource locking** is a technique used in computer systems to prevent multiple processes (or users) from simultaneously accessing a shared resource such as a file, database, or piece of memory.
-The general idea behind resource locking is to ensure that only one person can access the resource at any given time, to prevent **race conditions** and other synchronization issues that could lead to data corruption or inconsistencies.
-
-As a real life example, in an airline online check-in system, resource locking may be used to prevent multiple users from simultaneously booking the same seat.
-Only one user should be able to book a certain seat in the aircraft at any given time, to prevent conflicts and ensure data consistency.
-
-Throughout the course, we will encounter resource locking in many cases.
-
-Generally speaking, in Linux systems, two different processes cannot write to the same file concurrently (exactly at the same moment).
-Each process needs to obtain an exclusive **write lock** for the file.  
-That implies that all the other processes who are willing to write to this file will have to wait while one process is writing data into it.
-The more I/O intensive processes you have, the longer the wait time.
-
-In this question we will create processes which are competing on the same resource (same file), and see how some of them are changing their state from Running to Waiting.
-
-Create a file under `~/write_to_file_sequentially.sh` contains the following code, and give it executable (`x`) permissions:
-
-```console
-#!/bin/bash
-
-for i in $(seq 1000); do
-echo "hello world" > overloaded_file
-done
+```bash
+sudo systemctl stop yolo.service
+sudo systemctl disable yolo.service
+sudo rm /etc/systemd/system/yolo.service
+sudo systemctl daemon-reload
 ```
-
-This script writes the string "hello world" to a file called "overloaded_file". It does so 1000 times **sequentially**, and so will never be competing for access to the file (why?).
-
-Now, because we need multiple processes competing over the same resource, create the following script as well:
-
-```console
-#!/bin/bash
-
-for i in $(seq 1000); do
-./write_to_file_sequentially.sh &
-done
-```
-
-Name it `~/multi_process_file_writing.sh`, make it executable. Make sure you understand what this script does.
-
-Run the following commands, in **3 different terminal sessions**:
-
-1. First, in terminal 1, run the program by `./multi_process_file_writing.sh`.
-2. Next, run the `top` command in terminal 2. Observe the `multi_process_file_writing` process in top's view.
-
-In the last terminal you will try to catch processes of your program in different states.
-In the `ps` [man page](https://man7.org/linux/man-pages/man1/ps.1.html#PROCESS_STATE_CODES), read what each process state code means.
-
-3. In terminal 3, run the `ps -aux` multiple times until you'll see indications that some processes are waiting (sleeping due to IO operation), and some others are running.
-   While you'll find many processes in a waiting state (`D`), it may be hard to catch a process in a running state (`R`)... Use the `grep` command to filter only relevant lines.
 
 
 ### :pencil2: Run processes in the background terminal session
@@ -304,8 +228,8 @@ In the `ps` [man page](https://man7.org/linux/man-pages/man1/ps.1.html#PROCESS_S
 These processes can run in the foreground, occupying the terminal. 
 Alternatively, they can run in the background. The terminal can accept new commands while the program is running.
 
-1. Open a nes terminal session and execute `sleep 600` which initiates a process that "sleeps" 10 minutes and ends.
-2. Stop the process and send into the background by `CTRL+Z`.
+1. Open a new terminal session and execute `sleep 600` which initiates a process that "sleeps" 10 minutes and ends.
+2. Stop the process and send it into the background by `CTRL+Z`.
 3. Bring the process to the foreground by `fg`.
 4. Now run the same command while sending the process to the background by the `&` operator: `sleep 600 &`.
 5. Bring the process to the foreground.
