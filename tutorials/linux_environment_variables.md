@@ -25,48 +25,54 @@ The above example shows that `ls` is actually an executable file located under `
 
 ## The `export` command
 
-The `export` command is used to set environment variables in the current shell session or to export variables to **child processes**.
+The `export` command sets a variable in the current shell **and passes it to any child process** spawned from it. This is how processes receive configuration from the environment.
 
-When a variable is exported using the `export` command, it becomes available to any child process that is spawned by the current shell. This is useful when you need to pass environment variables to programs or scripts that you run.
+Recall that the YOLO app reads the confidence threshold from an environment variable:
 
-For example, let's say you want to add a directory called `mytools` to your `PATH` environment variable so that you can run executables stored in that directory. You can do this by running the following command:
-
-```bash
-export PATH=$PATH:/home/myuser/mytools
+```python
+_raw_threshold = os.environ.get("CONFIDENCE_THRESHOLD")
 ```
 
-This command adds the directory `/home/myuser/mytools` to the existing PATH environment variable, which is a colon-separated list of directories that the shell searches for executable files.
-
-If you only set the `PATH` variable without exporting it, it will only be available in the current shell session and will not be inherited by child processes.
+When you run `python app.py`, a new child process is created. For that process to see `CONFIDENCE_THRESHOLD`, you must export it:
 
 ```bash
-PATH=$PATH:/home/myuser/mytools
+export CONFIDENCE_THRESHOLD=0.7
+python app.py
+```
+
+If you set it without `export`, the variable exists only in the current shell and the child process (`python app.py`) will not inherit it:
+
+```bash
+CONFIDENCE_THRESHOLD=0.7   # NOT visible to child processes
+python app.py              # app.py falls back to the default 0.5
 ```
 
 ## The `source` command
 
-If you don't want to start a new process when executing a script or command, but to run it **in the current shell process**, you should `source` it.
+`source` runs a script **in the current shell process** instead of spawning a new child process. This means any variables or PATH changes the script makes take effect in your current shell.
 
-The below example demonstrate the usage of the `source` command. 
-We will use a bash variable called `$`, which contains the current process ID.
-
-Create the below bash file under `print_pid.sh`:
+A familiar example is activating a Python virtual environment:
 
 ```bash
-# Note that the $$ gives the value of the $ variable. 
-echo $$
+source .venv/bin/activate
 ```
 
-Let's execute this script, once within a new bash process, then when the script is sourced:
+The activation script needs to modify `PATH` (and a few other variables) **in your current shell** so that `python` and `pip` resolve to the venv's binaries. If you ran it as a regular script (`bash .venv/bin/activate`), those changes would happen inside a child process and disappear the moment it exits - your shell would remain unchanged and the venv would not be active.
 
-```console 
+You can verify this with the `$$` variable, which holds the current process ID:
+
+```console
 myuser@hostname:~$ echo $$
 44132
-myuser@hostname:~$ bash print_pid.sh
-50299
-myuser@hostname:~$ source print_pid.sh
+myuser@hostname:~$ bash .venv/bin/activate   # runs in a new process - has no effect
+myuser@hostname:~$ echo $$
+44132
+myuser@hostname:~$ source .venv/bin/activate  # runs in THIS shell - venv is now active
+(.venv) myuser@hostname:~$ echo $$
 44132
 ```
+
+Same PID throughout - `source` never left the current shell.
 
 # Exercises
 
@@ -90,17 +96,3 @@ echo my script is running...
 8. Try to use the `myscript` command in another new terminal session. Does it work? Why?
 
 
-### :pencil2: Elvis custom `ls` command
-
-The PATH variable on `elvis`' machine looks like:
-
-```console
-[elvis@station elvis]$ echo $PATH 
-/home/elvis/custom:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
-```
-
-`elvis` created a custom program called `ls`.
-The program is located in `/home/elvis/custom` directory.
-
-1. What is the command that `elvis` should execute such that **his** version of `ls` would be executed in the current terminal session only?
-2. What is the command that `elvis` should execute such that **Ubuntu**'s version of `ls` would be executed in the current and child terminal sessions?

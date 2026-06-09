@@ -33,12 +33,3 @@ When you run the above command, the package manager (in this case, `apt-get`) wi
 
 Follow [Docker official installation](https://docs.docker.com/engine/install/ubuntu/) docs on Ubuntu. Install Docker step by step while trying to understand the reason behind every `apt-get` command. What are the official GPG keys used for?
 
-### :pencil2: Experimenting with `apt-get`
-
-1. Why do we need `sudo` to `apt-get update` and `install`?
-2. Perform `apt-cache show apache2` to see the local list of the `apache2` package on your system.
-3. Choose one of the versions from the above output (preferably not the latest version), and install `apache2`, in this specific version.
-4. Perform `sudo apt-get update`. Was the list updated? Do you have some new versions of apache2 available to be installed?
-5. Upgrade `apache2` to the latest version.
-6. Remove `apache2`.
-
