@@ -65,7 +65,9 @@ As a Windows user, install VS Code on the Windows side (not inside WSL).
    `vscode:extension/ms-python.python`
 4. Install the Python Debugger extension:
    `vscode:extension/ms-python.debugpy`
-5. Set WSL (Ubuntu) as your default terminal profile in VS Code:
+5. Install the Pylint extension:
+   `vscode:extension/ms-python.pylint`
+6. Set WSL (Ubuntu) as your default terminal profile in VS Code:
    - Open Command Palette (`Ctrl+Shift+P`), run `Terminal: Select Default Profile`, and choose `WSL` or `Ubuntu (WSL)`.
    - Open a new terminal in VS Code and verify it opens in your Ubuntu/WSL shell.
 

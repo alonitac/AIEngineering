@@ -168,4 +168,53 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 </tr>
 
 
+<tr>
+ <td>12</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/bash_shells.md">Bash and other shells</a></td>
+ <td align="center"></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/bash_shells.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/bash_shells.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center">&nbsp;</td>
+
+</tr>
+
+<tr>
+ <td>13</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/bash_command_techniques.md">Bash commands techniques</a></td>
+ <td align="center"></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/bash_command_techniques.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/bash_command_techniques.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center">&nbsp;</td>
+
+</tr>
+
+<tr>
+ <td>14</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/bash_variables.md">Bash variables</a></td>
+ <td align="center"></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/bash_variables.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/bash_variables.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center">&nbsp;</td>
+
+</tr>
+
+<tr>
+ <td>15</td>
+ <td>Linux and Bash</td>
+ <td><a href="tutorials/bash_conditional_statements.md">Bash conditional statements</a></td>
+ <td align="center"></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/bash_conditional_statements.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/bash_conditional_statements.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+
+</tr>
+
+
 </table>
