@@ -1,277 +1,204 @@
 # Bash Variables
 
-Variables are how programming and scripting languages represent data. 
-A variable is nothing more than a **label**, a name assigned to a location or set of locations in computer memory holding an item of data. As seen in previous examples, shell variables are in uppercase characters by convention.
+A variable is a name that holds a value. Variables let you store data, avoid repeating yourself, and write scripts that adapt to different inputs.
 
-Let us carefully distinguish between the name of a variable and its value.
-If `variable1` is the name of a variable, then `$variable1` is a reference to its value, the data item it contains.
+In Bash, you assign a variable like this:
 
 ```bash
-variable1=23
-echo variable1
-echo $variable1
+name=Alice
 ```
 
-No space permitted on either side of = sign when initializing variables. What happens if there is a space?
+And you read it back by prefixing the name with `$`:
 
 ```bash
-VARIABLE =value
-VARIABLE= value
-VARIABLE = value
+echo $name    # Alice
 ```
 
+**Important:** there must be no spaces around the `=` sign. These all fail:
+
+```bash
+name = Alice   # error: "name" is interpreted as a command
+name =Alice    # error
+name= Alice    # error
+```
 
 ## Assigning and referencing variables
 
-Below are a few examples of variable referencing.
-Try them out and make sure you understand each one of the cases.
-
 ```bash
-A=375
-HELLO=$A
-
-echo HELLO      # HELLO
-echo $HELLO     # 375
-echo ${HELLO}   # 375
-echo "$HELLO"   # 375
-echo "${HELLO}" # 375
-echo "Oh, I like them squishy" >> ode_to_$A.txt # ode_to_375.txt was created
-              
-# Variable referencing disabled (escaped) by single quotes
-echo '$HELLO'
+greeting=Hello
+echo $greeting        # Hello
+echo ${greeting}      # Hello - curly braces make the boundary explicit
+echo "$greeting"      # Hello - double quotes allow variable expansion
+echo '$greeting'      # $greeting - single quotes suppress expansion
 ```
 
-There are [MUCH more](https://tldp.org/LDP/abs/html/parameter-substitution.html#PARAMSUBREF) functionalities.
-
-#### Bash variables are untyped
-
-Unlike many other programming languages, Bash does not segregate its variables by "type." 
-Essentially, Bash variables are character strings, but, depending on context, Bash permits arithmetic operations and comparisons on variables.
-The determining factor is whether the value of a variable contains only digits.
+The curly brace form `${VAR}` matters when the variable name is adjacent to other characters:
 
 ```bash
-a=879
-echo "The value of \"a\" is $a."
-
-a=16+5
-echo "The value of \"a\" is now $a."
+A=hola
+echo "$A_world"    # prints nothing - bash looks for variable A_world (undefined)
+echo "${A}_world"  # hola_world - bash expands A, then appends _world
 ```
 
-#### Assignment using `let`
+This is a common bug. If a variable expansion produces an unexpected empty string, check whether you need `${}`.
+
+When you are done with a variable, you can unset it:
 
 ```bash
-let a=16+5
-echo "The value of \"a\" is now $a."
+unset A
+echo $A    # prints nothing
 ```
 
-#### Variable assignment using the commands substitution - `$(...)`
+## Variables are untyped - but context matters
+
+Bash does not have types like integers or strings. Every variable is stored as a string. But Bash is smart enough to do arithmetic when the context requires it:
 
 ```bash
-R=$(cat /etc/profile)
+a=5
+echo $a          # 5 (as a string)
+echo $a+3        # 5+3 (no arithmetic - just string concatenation)
+
+let a=5+3
+echo $a          # 8 (let performs integer arithmetic)
+```
+
+If you need arithmetic, use `let` or the `$(( ))` syntax (covered more in the arithmetic tutorial):
+
+```bash
+result=$((10 + 4))
+echo $result     # 14
+```
+
+## Storing command output in a variable
+
+Use `$(...)` to capture the output of a command into a variable:
+
+```bash
+today=$(date +%Y-%m-%d)
+echo $today      # 2026-06-10
+
 arch=$(uname -m)
-echo $R
-echo $arch
+echo $arch       # x86_64 (or whatever your architecture is)
 ```
 
-#### Variable reference using curly braces - `${...}`
+This is called **command substitution**. The command inside `$(...)` runs in a subshell and its output replaces the expression.
 
-Consider the below example:
+## Positional parameters
 
-```console
-myuser@hostname:~$ ls
-hello_world.txt
-myuser@hostname:~$ echo $A
-hola
-myuser@hostname:~$ echo "filename language changed!" > $A_world.txt
-myuser@hostname:~$ ls
-hello_world.txt
-myuser@hostname:~$ ls -a
-hello_world.txt        .txt
-```
+When you run a script, anything you type after the script name is available inside the script as `$1`, `$2`, `$3`, etc.
 
-Where is the file `hola_world.txt`? A couple of things have been mistakenly done by `myuser`! 
-First, the bash shell dereferenced the correct variable name, but not the one that `myuser` intended. 
-The bash shell resolved the (uninitialized) variable A_world (to nothing), and created the resulting file `.txt`. Secondly, because `.txt` starts with a `.`, it is a "hidden file", as the `ls -a` command reveals.
-
-Let's utilize the curly braces reference syntax to resolve `myuser`'s problems: 
-
-```console
-myuser@hostname:~$ echo "filename language changed!" > ${A}_world.txt
-myuser@hostname:~$ ls
-hello_world.txt       hola_world.txt       .txt
-```
-
-When finished with a variable, the variable may be unbound from its value with the `unset` command.
-
-```console
-myuser@hostname:~$ unset A
-myuser@hostname:~$ echo $A
-
-myuser@hostname:~$
-```
-
-## Script positional variables
-
-Positional arguments are arguments passed to a command or script in a specific order, usually separated by spaces. Positional arguments can be accessed, within a bash script file, using special variables such as `$1`, `$2`, `$3`, and so on, where `$1` refers to the first argument, `$2` refers to the second argument, and so on.
-
-Let's see them in action... create a file called `BarackObama.sh` as follows:
+Create a file called `greet.sh`:
 
 ```bash
 #!/bin/bash
-
-# This script reads 3 positional parameters and prints them out.
-
-echo "$0 invoked with the following arguments: $@"
-
-POSPAR1="$1"
-POSPAR2="$2"
-POSPAR3="$3"
-
-echo "$1 is the first positional parameter, \$1."
-echo "$2 is the second positional parameter, \$2."
-echo "$3 is the third positional parameter, \$3."
-echo
-echo "The total number of positional parameters is $#."
-
-if [ -n "${10}" ]               # Parameters > $9 must be enclosed in {brackets}.
-then
-  echo "Parameter #10 is ${10}"
-fi
+echo "Hello, $1! You passed $# argument(s)."
+echo "All arguments: $@"
 ```
 
-Execute the script by:
+Run it:
 
 ```bash
-bash positional.sh Yes We Can 
-bash positional.sh Yes We Can bla bla 1 2 3
+bash greet.sh Alice
+# Hello, Alice! You passed 1 argument(s).
+# All arguments: Alice
+
+bash greet.sh Alice Bob Carol
+# Hello, Alice! You passed 3 argument(s).
+# All arguments: Alice Bob Carol
 ```
 
-Investigate the script output and make sure you understand each variable. 
+### Special variables at a glance
 
-## Special bash variables
+| Variable | What it contains |
+|---|---|
+| `$0` | The name of the script itself |
+| `$1`, `$2`, ... | The 1st, 2nd, ... argument |
+| `$#` | The number of arguments passed |
+| `$@` | All arguments as separate words |
+| `$*` | All arguments as a single string |
+| `$?` | Exit status of the last command |
+| `$$` | Process ID of the current shell |
 
-Special bash variables are built-in variables that hold information about the shell environment and provide useful information for shell scripting.
+> For arguments beyond `$9`, wrap in braces: `${10}`, `${11}`, etc.
 
-- `$@` - Expands to the positional parameters, starting from one.
-- `$#` - Expands to the number of positional parameters in decimal.
-- `$?` - Expands to the exit status of the most recently executed foreground pipeline.
-- `$$` - Expands to the process ID of the shell.
-- `$0` - Expands to the name of the shell or shell script.
-- `$*`  - Expands to all the positional parameters passed to the script or function as a single word
+## Variable expansion tricks
 
-## Variable expansion
+Bash has built-in ways to manipulate variables when you reference them.
 
-Variable expansion is a feature in Bash that allows you to manipulate a variable's value when referencing it. Here are a few basic examples:
+### Default value - `${VAR:-default}`
 
-#### Default assignment
+If `VAR` is unset or empty, use `default` instead:
 
 ```bash
-${VAR:-word}
+echo ${NAME:-"stranger"}   # prints "stranger" if NAME is not set
+NAME=Alice
+echo ${NAME:-"stranger"}   # prints "Alice"
 ```
 
-If `VAR` is unset or null, the expansion of `word` is substituted.  Otherwise, the value of `VAR` is used.
+This is handy for making scripts safe when an argument is missing.
 
-```console
-myuser@hostname:~$ VAR=123
-myuser@hostname:~$ echo ${VAR:-undefinedValue}
-123
-myuser@hostname:~$ unset VAR
-myuser@hostname:~$ echo ${VAR:-undefinedValue}
-undefinedValue
-myuser@hostname:~$ echo $VAR
-undefinedValue
-```
+### Error if unset - `${VAR:?message}`
 
-#### Default error message
+If `VAR` is unset or empty, print `message` to stderr and exit:
 
 ```bash
-${VAR:?word}
+echo ${REQUIRED_VAR:?"REQUIRED_VAR must be set"}
 ```
 
-If `VAR` is null or unset, the expansion of `word` is written to the standard error and the shell, if it is not interactive, exits.
+Use this to catch missing configuration early rather than letting a script fail in a confusing way later.
 
-```console
-myuser@hostname:~$ VAR=
-myuser@hostname:~$ echo ${VAR:?VAR is unset or null}
-myuser@hostname:~$ echo $?
-```
+### Substring - `${VAR:offset:length}`
 
-#### Variable substring
+Extract part of a string:
 
 ```bash
-${parameter:offset}
-${parameter:offset:length}
+s="Hello, World"
+echo ${s:7}      # World
+echo ${s:7:5}    # World
+echo ${s:0:5}    # Hello
 ```
 
-This expansion allows you to extract a portion of a string variable based on a specified index and length.
-
-```console
-$ string=01234567890abcdefgh
-$ echo ${string:7}
-7890abcdefgh
-$ echo ${string:7:0}
-
-$ echo ${string:7:2}
-78
-$ echo ${string:7:-2}
-7890abcdef
-$ echo ${string: -7}
-bcdefgh
-$ echo ${string: -7:0}
-
-$ echo ${string: -7:2}
-bc
-```
-
-#### String length
+### String length - `${#VAR}`
 
 ```bash
-${#parameter}
+s="Hello"
+echo ${#s}    # 5
 ```
 
-The length of characters of the expanded value of `parameter` is substituted.
 
-There are [many more](https://tldp.org/LDP/abs/html/parameter-substitution.html) of them!
+# Exercises
 
-# Exercises 
+### :pencil2: Variable basics - spot the bugs
 
-### :pencil2: Dated copy
+Each snippet below has a problem. Identify what is wrong, fix it, and explain why your fix works.
 
-Create a script that takes a valid file path as the first argument and creates a dated copy of the file. 
-For example:
+1. ```bash
+   city = London
+   echo "I live in $city"
+   ```
 
-```console
-myuser@hostname:~$ ./datedcp.sh myfile.txt
-myuser@hostname:~$ ls
-2022-04-30_myfile.txt
+2. ```bash
+   prefix=backup
+   touch $prefix_2026.txt    # intended filename: backup_2026.txt
+   ```
+
+3. ```bash
+   greeting='Hello, $USER'
+   echo $greeting            # intended: Hello, alice
+   ```
+
+### :pencil2: Dated file copy
+
+Write a script called `datedcp.sh` that takes a filename as its first argument and creates a copy of the file with today's date prepended to the name.
+
+```bash
+bash datedcp.sh report.txt
+ls
+# 2026-06-10_report.txt   report.txt
 ```
 
-### :pencil2: Theater night out booking system
-
-In our course repo, copy the file under `theatre_nighout/init.sh` into an empty directory and execute it.
-This script creates 5 directories, each for a famous theater show. 
-In each directory there are 50 files, representing 50 available seats for the show.
-Create a bash script `available_seat.sh` that takes one argument which is the name of a show and prints the available seats for the show (by simply using `ls` command).
-Create another bash script `booking.sh` that takes two arguments - the name of a show and a seat number. 
-
-The selected seat should be marked as booked by deleting the file that represents the seat number.
-You should print an informative message to the user upon successful or failed booking.
-
-You can always re-run `init.sh` to test your script again. 
-
-For example:
-
-```console
-$ ./init.sh && cd shows
-$ ./available_seat.sh Hamilton
-Available seats for Hamilton:
-1 2 3 4 5 6 7 8 9 10 ... 48 49 50
-$ ./booking.sh Hamilton 5
-Seat 5 for Hamilton has been booked!
-$ ./available_seat.sh Hamilton
-Available seats for Hamilton:
-1 2 3 4 6 7 8 9 10 ... 48 49 50
-$ ./booking.sh Hamilton 5
-Error: Seat 5 for Hamilton is already booked!
-```
+Requirements:
+- Use `$(date +%Y-%m-%d)` for the date
+- Print an error and exit if no argument is given
+- Print an error and exit if the file does not exist (hint: use `[ -f "$1" ]`)
 

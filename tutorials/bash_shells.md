@@ -1,225 +1,209 @@
 # Shells
 
-## Motivation for bash scripting
 
-Bash, or the Bourne-Again SHell, is a widely-used Unix shell and command language that provides a powerful command-line interface for interacting with the operating system.
+A **shell** is the program that reads the commands you type and runs them. When you open a terminal, you are inside a shell. The shell sits between you and the Linux kernel - it translates your instructions into actions the operating system can execute.
 
-Learning Bash can help you:
+The most common shell on Linux is **Bash** (Bourne-Again SHell). You will use it constantly as a developer or system administrator.
 
--  Make life easier on UNIX or UNIX-like system
--  Ease execution of daily tasks
--  Automate important operation tasks
+## From a list of commands to a real script
 
-Overall, learning Bash can help you to become a more efficient and effective system administrator, developer, or data analyst.
+The best way to understand scripting is to watch a simple idea grow into a proper program. Consider a task: **clear old log files in `/var/log`**.
 
-The UNIX shell program interprets user commands to the kernel, which are either directly entered by the user, or which can be read from a file called the **shell script**. Apart from passing commands to the kernel, the main task of a shell is providing a **user environment**, which can be configured individually using shell resource configuration files.
-
-The example below shows the evolution of a bash program, just take a look, you don't need to execute it. It starts simply by grouping a few commands into a file, without any error handling and flow control... until it forms a well written professional script.
-
-### From commands to Bash program
-
-Consider the below script to clean up log files (`messages`, `wtmp`) in `/var/log`. 
+**Version 1 - just commands pasted into a file:**
 
 ```bash
-# Run as root, of course.
 cd /var/log
 cat /dev/null > messages
 cat /dev/null > wtmp
 echo "Log files cleaned up."
 ```
 
-There is nothing unusual here, only a set of commands that could just as easily have been invoked one by one. Is this a script? Maybe...Is this a program? Not yet...
+This works, but it has some serious issues:
 
-Let's try again...
+- It assumes you execute the script as root. 
+- If some command fails, bash by default will continue running the next command, finally printing "Logs cleaned up" even though it failed.
 
-```bash
-# Proper header for a Bash script.
-#!/bin/bash
 
-# Run as root, of course.
-LOG_DIR=/var/log   # Variables are better than hard-coded values.
-
-cd $LOG_DIR
-cat /dev/null > messages
-cat /dev/null > wtmp
-echo "Logs cleaned up."
-
-exit # The right and proper method of "exiting" from a script.
-# A bare "exit" (no parameter) returns the exit status of the preceding command.
-```
-
-Now that's beginning to look like a real script. But we can go even farther...
-
-The following script uses quite a number of features that will be explained later on.
+**Version 2 - production-quality with error handling:**
 
 ```bash
 #!/bin/bash
 LOG_DIR=/var/log
-ROOT_UID=0 	# Only users with $UID 0 have root privileges.
-LINES=50   	# Default number of lines saved.
+ROOT_UID=0       # Only users with $UID 0 have root privileges
 
-E_XCD=86   	# Can't change directory?
-E_NOTROOT=87   # Non-root exit error.
+E_XCD=86         # Exit code: can't change directory
+E_NOTROOT=87     # Exit code: not root
 
-
-# Run as root, of course.
-if [ "$UID" -ne "$ROOT_UID" ]
-then
+# Require root
+if [ "$UID" -ne "$ROOT_UID" ]; then
   echo "Must be root to run this script."
   exit $E_NOTROOT
 fi
 
-if [ -n "$1" ]  # Test whether command-line argument is present (non-empty).
-then
-  lines=$1
-else
-  lines=$LINES  # Default, if not specified on command-line.
-fi
-
+# Verify we are in the right directory before modifying anything
 cd $LOG_DIR
-if [ `pwd` != "$LOG_DIR" ] # or if [ "$PWD" != "$LOG_DIR" ]
-                       	# Not in /var/log?
-then
+if [ "$PWD" != "$LOG_DIR" ]; then
   echo "Can't change to $LOG_DIR."
   exit $E_XCD
-fi # Doublecheck if in right directory before messing with log file.
+fi
 
-
-tail -n $lines messages > mesg.temp  # Save last section of message log file.
-mv mesg.temp messages            	# Rename it as system log file.
+cat /dev/null > messages
 cat /dev/null > wtmp
 
 echo "Log files cleaned up."
 exit 0
 ```
 
-## Shell types 
+## Shell types
 
-Let's recall the 2 main shells we usually work with in Linux system:
+Linux ships with several shells. The two you will encounter most often:
 
-- `sh` or Bourne Shell: the original shell still used on UNIX systems.
-- `bash` or Bourne Again shell: the standard GNU shell, intuitive and flexible. Probably most advisable for beginner users, while at the same time a powerful tool for the advanced and professional user. On Linux, bash is the standard shell for common users.
+| Shell | Description |
+|---|---|
+| `sh` | The original Bourne Shell. Minimal and available everywhere. |
+| `bash` | The Bourne-Again Shell. A superset of `sh` with many extras. The default shell on most Linux systems. |
 
-The file `/etc/shells` gives an overview of known shells on a Linux system:
+To see all shells installed on your system:
 
 ```bash
 cat /etc/shells
 ```
 
-Here is an example of a shell called [Restricted Bash](https://tldp.org/LDP/abs/html/restricted-sh.html):
+To find the default shell for your user account (it is stored in `/etc/passwd`):
 
 ```bash
-rbash 	# this command creates a new terminal session of restricted bash which may be looked exactly like bash terminal
-cd /var
-```
-
-Was the last command successful? What can you conclude about `rbash`?
-
-Your default shell is set in the `/etc/passwd` file for each user.
-
-```bash
-# to know your current Linux user, echo the following environment variable
 echo $USER
 cat /etc/passwd | grep $USER
 ```
 
-## Which shell should execute the script?
+The last field on your line is your default shell - typically `/bin/bash`.
 
-When running a script in a subshell, you should define which shell should run the script. The shell type in which you wrote the script might not be the default on your system, so commands you entered might result in errors when executed by the wrong shell.
+### Restricted Bash (`rbash`)
 
-The **sha-bang (#!)** at the head of a script tells your system that this file is a set of commands to be fed to the command interpreter indicated.
-
-Note that the path given at the "sha-bang" must be correct, otherwise an error message -- usually "Command not found." -- will be the only result of running the script.
-
-Copy and execute the following snippet to a `myscript.sh` file in your local Linux machine.
+`rbash` is a locked-down version of Bash that prevents users from doing things like changing directories or setting the `PATH`. It is sometimes assigned to restricted accounts:
 
 ```bash
-#!/bin/bash
-
-ls
-cd /var
+rbash          # start a restricted bash session
+cd /var        # try to change directory - what happens?
 ```
 
-Test the above script with `/bin/sh` as the sha-bang shell. Add an `echo` command to print some environment variable that will indicate the shell that is currently running the program.
+You should see a "restricted" error. This is intentional - `rbash` limits what a user can do.
 
-## Run bash programs 
+## Running a script
 
-Having written a bash script, you can invoke it in two ways:
+There are two ways to run a Bash script:
 
-- `./myscript.sh` - This is the method we’ve seen so far. It runs the script as an executable file, using the interpreter specified in the shebang line. If the script is not marked as executable, you will get a "Permission denied" error.
-- `bash myscript.sh` - This explicitly runs the script using the bash shell, regardless of the shebang line (`#!/bin/bash`) at the beginning of the script. This means that even if the script is not marked as executable (`chmod +x myscript.sh`), you can still run it.
+**Method 1: as an executable**
+```bash
+chmod +x myscript.sh   # mark the file as executable (only needed once)
+./myscript.sh          # run it
+```
+The `./` is required because the current directory is not in `$PATH` by default.
+
+**Method 2: pass it to bash directly**
+```bash
+bash myscript.sh
+```
+This works even without `chmod +x`. The shebang line is ignored - bash is used regardless.
+
+## The shebang line
+
+When you run a script with `./myscript.sh`, the OS reads the first line to decide which interpreter to use. That line is the **shebang**:
+
+```
+#!/bin/bash
+```
+
+The `#!` is the magic marker, and `/bin/bash` is the path to the interpreter. If this path is wrong, you will get a "Command not found" error when running the script.
+
+> **What happens without a shebang?** The system falls back to `/bin/sh`, which may behave differently from Bash. Always include the shebang to be explicit.
 
 
-## Bash system-wide configuration files
+## Shell contexts: login, non-login, interactive, non-interactive
 
-Before we begin, it is important to distinguish between subtly different types of shells: login and non-login shells, and interactive and non-interactive shells.
+Not all shells are created equal. Bash behaves slightly differently depending on *how* it was started. There are two independent dimensions:
 
-- A **login shell** is executed only after a user logs into the system.
-- A **non-login shell** is started within a user's current session (shells that are spawned from within an existing shell session).
-- An **interactive shell** allows the user to interact with the system through a command-line interface.
-- A **non-interactive shell** is not designed for user interaction and is typically used for running scripts or commands in the background.
+**Login vs. non-login:**
+- A **login shell** starts when you first authenticate to a shell session, e.g. SSH or `su -l username`. 
+- A **non-login shell** starts inside an existing session, e.g. a new terminal tab, or a shell spawned from a `bash` command.
 
-> #### 🧐 Test yourself
-> 
-> Consider the below terminal session:
-> 
+**Interactive vs. non-interactive:**
+- An **interactive shell** reads commands from your keyboard and shows a prompt.
+- A **non-interactive shell** runs a script and exits - no prompt, no user input.
+
+These two dimensions combine: a script you run with `bash myscript.sh` is **non-login and non-interactive**. An SSH session is **login and interactive**.
+
+> #### 🧐 Think it through
+>
+> Look at this terminal session and classify each numbered line:
+>
 > ```bash
-> 1 myuser@hostname:~$ su -l john
->   Password: [PASSWORD ENTERED] 
->   john@hostname:~$ echo $USER
->   john
-> 2 john@hostname:~$ rbash
-> 3 john@hostname:~$ sh -c 'echo hi'
+> 1   myuser@host:~$ su -l john    # switch to john with a login shell
+>     john@host:~$
+> 2   john@host:~$ rbash           # start restricted bash
+> 3   john@host:~$ sh -c 'echo hi' # run a one-off command in sh
 > ```
-> 
-> For each of lines 1, 2, and 3, determine the shell type: login/non-login, and interactive/non-interactive. 
+>
+> For each of lines 1, 2, and 3: is the new shell **login or non-login**? **Interactive or non-interactive**?
+>
+> <details>
+> <summary>Hints</summary>
+>
+> - `su -l` (the `-l` flag) simulates a full login.
+> - `rbash` started from within an existing session is not a login shell.
+> - `sh -c '...'` runs a command and exits - the user never types into it.
+> </details>
 
-Bash configuration files are scripts that are executed when a Bash shell is started (or ends). These scripts define the initial **environment and behavior of the shell**. There are several Bash startup scripts that can be used to configure the Bash shell. Here are some of the most commonly used Bash startup scripts:
+## Configuration files: who runs what, and when
 
-1. `/etc/profile`: This script is executed by all login shells (sh, bash etc..) when a user logs in to the system. It sets environment variables, adds directories to the PATH, and performs other **system-wide** configuration tasks.
-1. `/etc/profile.d/*.sh`: This directory contains additional shell scripts that are `source`d by `/etc/profile` if they exist. These scripts can be used to add environment variables, aliases, or other settings that are specific to a particular application or package.
-1. `/etc/bash.bashrc`: This script is executed by all Bash shells that are not login shells. It sets system-wide Bash settings.
-1. `/etc/bash_profile`: This script is executed by login shells after `/etc/profile`. It can be used to override or extend the settings in `/etc/profile`, or to perform user-specific configuration tasks.
+Bash reads different configuration files depending on the shell context. This is how your `PATH`, aliases, and environment variables get set up automatically.
 
-## Bash user-wide configuration files
+### System-wide files (affect all users)
 
-Bash user-wide configuration files are scripts that are executed by Bash each time a user logs in. These files are located in the user's home directory and are used to customize the user's shell environment. Here are some common Bash user-wide configuration files:\
+| File | When it runs |
+|---|---|
+| `/etc/profile` | Login shells only. Sets system-wide environment variables and `PATH`. |
+| `/etc/profile.d/*.sh` | Sourced by `/etc/profile`. Used by packages to add their own settings. |
+| `/etc/bash.bashrc` | Non-login interactive shells. Sets system-wide Bash options. |
 
-1. `~/.bash_profile`: This is the primary Bash user configuration file. It is executed when the user logs in and sets up the user's environment.
-1. `~/.bashrc`: This file is executed by Bash for each interactive non-login shell. It is used to set up aliases, functions, and other settings for the user's shell.
-1. `~/.bash_login`: This file is executed after `~/.bash_profile` if it exists. It is used to provide additional configuration settings.
-1. `~/.profile`: This file is executed by the command interpreter for login shells. It is used to set environment variables and to execute commands that should be run for login shells.
+### Per-user files (in your home directory)
 
-These configuration files allow users to customize their shell environment to their specific needs, including setting aliases, modifying the prompt, and configuring other settings.
+| File | When it runs |
+|---|---|
+| `~/.bash_profile` | Login shells. Your personal environment setup - `PATH` additions, etc. |
+| `~/.bashrc` | Non-login interactive shells. Aliases, functions, prompt customizations. |
+| `~/.profile` | Login shells, if `~/.bash_profile` does not exist. Also read by `sh`. |
 
-> #### 🧐 Test yourself 
-> 
-> The `ll` command is a commonly used alias for  `ls -l`. Try it yourself…
-> 
-> Open the `~/.bashrc` file using your favorite  text editor (e.g. `nano`) and search this alias definition. Add another alias of your own. 
+**The key rule:** if you open a new terminal tab in a desktop environment, you get a non-login interactive shell - so `~/.bashrc` is what runs. If you SSH in, you get a login interactive shell - so `~/.bash_profile` (or `~/.profile`) runs.
+
+> #### 🧐 Explore your own config
+>
+> Run `ll` in your terminal. If it works, it is probably an alias for `ls -l` defined in `~/.bashrc`.
+>
+> Open `~/.bashrc` in a text editor and find the alias definition:
+> ```bash
+> nano ~/.bashrc
+> ```
+> Then add an alias of your own - something you will actually use. Reload the file without restarting the terminal:
+> ```bash
+> source ~/.bashrc
+> ```
+> Test that your new alias works.
+
+---
+
+# Exercises
 
 
-# Exercises 
+### :pencil2: The nobody user - what shell does a system account use?
 
-### :pencil2: Read-only Environment Variable for all Shells
+System accounts like `nobody` exist for security purposes, not for human logins. Let's find out what shell they are assigned.
 
-Create a read-only environment variable that is accessible to all users and all shells on the system. Under `/etc/profile.d` dir, create your script that defines the variable (any var name and value you wish). Then, use the `readonly` command to make the variable read-only so that it cannot be modified by any user or process on the system. Finally, verify that the variable is read-only by attempting to modify its value from your user shell (re-login is needed).
-
-### :pencil2: Connect to user-friendly users
-
-Attempt to log in to the `nobody` user on an **Ubuntu system** (the root account is able to connect to every user without providing the users’ password). 
-Observe the message that is displayed and identify the reason for it.
-Which shell does the `nobody` user use?
-
-### :pencil2: The root user command prompt in the `sh` shell
-
-1. Open a terminal and start a `sh` session as the root user:  `sudo sh`.
-1. Note that the prompt is “#”. Exit the session.
-1. Open a terminal and start a `sh` session as your user (assuming you are not root): `sh`.
-1. How does the prompt look like? It should be different from the root’s prompt. 
-
-Take a look in the content of `/etc/profile` and search (even if you’re still not familiar with all the code elements there) for the code that defines the shell prompt for root and non-root users. 
-
-Which env var defines the shell prompt? Try to change this variable in your current terminal session and see what happens.
+1. Look up the `nobody` user in `/etc/passwd`:
+   ```bash
+   grep nobody /etc/passwd
+   ```
+2. What is the shell listed for `nobody`? Why do you think that shell was chosen?
+3. As root, try to switch to the `nobody` user: `sudo su -l nobody`. What happens? What does the error or output tell you about that shell?
 
 

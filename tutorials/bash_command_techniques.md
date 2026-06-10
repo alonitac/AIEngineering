@@ -2,112 +2,106 @@
 
 ## Exit status and `$?`
 
-In Unix-like operating systems, every command that is executed returns an exit status to the shell that invoked it. The exit status is a numeric value that indicates the success or failure of the command. A value of 0 indicates success, while a non-zero value indicates failure.
+Every command you run returns a number to the shell when it finishes. This number is called the **exit status** (or return code):
 
-The exit status of the most recently executed command can be accessed via the `$?` variable in Bash.
+- `0` means the command succeeded
+- Any non-zero value means something went wrong
 
-```console
-[myuser@hostname]~$ ls /non-existing-dir
-ls: cannot access '/non-existing-dir': No such file or directory
-[myuser@hostname]~$ echo $?
-2
-```
-
-In the above example, if you run a command like `ls /non-existing-dir`, you will receive an error message saying that the directory does not exist, and the exit status will be non-zero. You can access the exit status of this command by typing `echo $?`. The output will be the exit status of the previous command (in this case, the value is 2).
-Some common non-zero exit status values include:
-
-- `1`: General catch-all error code
-- `2`: Misuse of shell built-ins (e.g. incorrect number of arguments)
-- `126`: Command found but not executable
-- `127`: Command not found
-- `128`+: Exit status of a program that was terminated due to a signal
-
-
-Explore the man page of the `grep` command. List all possible exit codes, and specify the reason for every exit code.
-
-## Running Multiple Commands (Conditionally)
-
-The bash shell allows users to join multiple commands on a single command line by separating the commands with a `;` (semicolon).
-
-```console
-[myuser@hostname]~$ cd /etc/ssh; ls
-moduli  	ssh_config.d  sshd_config.d   	ssh_host_ecdsa_key.pub  ssh_host_ed25519_key.pub  ssh_host_rsa_key.pub
-ssh_config  sshd_config   ssh_host_ecdsa_key  ssh_host_ed25519_key	ssh_host_rsa_key      	ssh_import_id
-[myuser@hostname]/etc/ssh$
-```
-
-Nothing special in the above example… just two commands that were executed one after the other. 
-
-The bash shell uses `&&` and `||` to join two commands conditionally. When commands are conditionally joined, the first will always execute. The second command may execute or not, depending on the return value (exit code) of the first command. For example, a user may want to create a directory, and then move a new file into that directory. If the creation of the directory fails, then there is no reason to move the file. The two commands can be coupled as follows:
-
-```console
-[myuser@hostname]~$ echo "one two three" > numbers.txt
-[myuser@hostname]~$ mkdir /tmp/boring && mv numbers.txt /tmp/boring
-```
-
-By coupling two commands with `&&`, the second command will only run if the first command succeeded (i.e., had a return value of 0).
-
-What if the `mkdir` command failed?
-
-Similarly, multiple commands can be combined with `||`. In this case, bash will execute the second command only if the first command "fails" (has a non zero exit code). This is similar to the "or" operator found in programming languages. In the following example, myuser attempts to change the permissions on a file. If the command fails, a message to that effect is echoed to the screen.
-
-```console
-[myuser@hostname]~$ chmod 600 /tmp/boring/numbers.txt || echo "chmod failed."
-[myuser@hostname]~$ chmod 600 /tmp/mostly/boring/primes.txt || echo "chmod failed"
-chmod: failed to get attributes of /tmp/mostly/boring/primes.txt': No such file or directory
-chmod failed
-```
-
-It’s common in bash scripts to create a directory and immediately `cd` to the directory, if the creations succeeded. Use conditional the `&&` operator to create the dir and cd into it only if the creation succeeded. 
-
-<details>
-  <summary>
-     Solution
-  </summary>
+You can always check the exit status of the last command with `$?`:
 
 ```bash
-mkdir newdir && cd newdir
+ls /non-existing-dir
+echo $?          # prints 2 - the directory doesn't exist
 ```
-
-</details>
-
-## Command Substitution
-
-Command substitution allows users to run arbitrary commands in a subshell and incorporate the results into the command line. The modern syntax supported by the bash shell is: 
 
 ```bash
-$(subcommand)
+ls /etc
+echo $?          # prints 0 - success
 ```
 
-As an example of command substitution, `myuser` would like to create a directory that contains the date in its name. After examining the `date(1)` man page, he devises a format string to generate the date in a compact format.
+The `$?` variable is overwritten after every command, so you need to capture it immediately if you want to use it later.
+
+Common exit status values:
+
+| Code | Meaning |
+|---|---|
+| `0` | Success |
+| `1` | General error |
+| `2` | Misuse of a shell built-in (wrong arguments, etc.) |
+| `126` | Command found but not executable |
+| `127` | Command not found |
+| `128+N` | Process killed by signal N |
+
+
+## Running multiple commands
+
+### Unconditional - `;`
+
+A semicolon runs commands one after another, regardless of whether the previous one succeeded:
 
 ```bash
-[prince@station prince]$ date +%d%b%Y
-04May2023
+cd /tmp; ls
 ```
 
-He now runs the mkdir command, using command substitution.
+The `ls` runs even if `cd` fails. This is rarely what you want when one command depends on the other.
+
+### `&&` - run the second only if the first succeeded
+
+`&&` connects two commands so the second only runs if the first exits with `0`:
 
 ```bash
-[prince@station prince]$ mkdir reports.$(date +%d%b%Y)
-[prince@station prince]$ ls
-reports.04May2003
+mkdir /tmp/myproject && mv report.txt /tmp/myproject
 ```
 
-The bash shell implements command substitution by spawning a new subshell, running the command, recording the output, and exiting the subshell. The text used to invoke the command substitution is then replaced with the recorded output from the command.
+If `mkdir` fails (the directory already exists, or you lack permissions), `mv` is skipped. This prevents you from accidentally moving a file to the wrong place.
 
-# Exercises 
+### `||` - run the second only if the first failed
 
-### :pencil2: Code simplification using logical operators
+`||` is the opposite: the second command runs only if the first exits non-zero:
 
 ```bash
-ls -l /home/user/mydir
-if [ $? -eq 0 ]; then
-    echo "Directory exists."
-else
-    echo "Directory does not exist."
-fi
+chmod 600 /tmp/myproject/report.txt || echo "Could not set permissions."
 ```
 
-The above code executes the `ls` command, then uses the `$?` variable along with [if statement](https://tldp.org/LDP/abs/html/fto.html) to test if the directory exists and prints corresponding messages.  
-Use `&&` and `||` operators to simplify the script. The simplified code should achieve the same functionality in **one command**!
+This is useful as a quick fallback or error message. If `chmod` succeeds, the `echo` is skipped.
+
+### Combining them
+
+You can chain `&&` and `||` together to express simple success/failure logic in one line:
+
+```bash
+mkdir /tmp/logs && echo "Directory created." || echo "Failed to create directory."
+```
+
+This reads: try `mkdir`; if it succeeds, print the success message; if it fails, print the failure message.
+
+> **Note:** The `||` at the end applies to the result of the `&&` expression, so if `mkdir` succeeds but the `echo` somehow fails, the failure message would still print. For scripts that need to be robust, use `if` statements instead.
+
+## Command substitution
+
+Command substitution lets you use the *output* of a command as part of another command. The syntax is:
+
+```bash
+$(command)
+```
+
+For example, to create a directory named with today's date:
+
+```bash
+mkdir reports.$(date +%d%b%Y)
+ls
+# reports.10Jun2026
+```
+
+Bash runs `date +%d%b%Y` in a subshell, captures its output, and substitutes it in place of `$(...)` before running `mkdir`.
+
+Another practical example - store the current user in a variable:
+
+```bash
+owner=$(whoami)
+echo "Running as: $owner"
+```
+
+Command substitution works anywhere a string is expected: in variable assignments, command arguments, filenames, and more.
+
+
