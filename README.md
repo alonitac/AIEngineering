@@ -224,7 +224,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/slides/aws_intro.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/slides.png" /></a></td>
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/fursa_aws_intro.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/aws_intro.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
- <td align="center"></td>
+ <td align="center"><a href="tasks/t002_yolo_cicd_workflow.md">T002: Yolo multi-env deployment in AWS</a></td>
  <td align="center"><a href="https://drive.google.com/file/d/1ga6PTpg160D15fF1OwDzTmRvnrjlOkj4/view?usp=drivesdk">2026-06-11</a></td>
 
 
