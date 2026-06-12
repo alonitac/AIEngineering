@@ -8,6 +8,9 @@ You'll build isolated dev and prod networks, run the Yolo service as a Linux ser
 
 ## Part I: Build a multi-environment network
 
+![poly_yolo_aws][poly_yolo_aws]
+
+
 Create a VPC with **4 public subnets** split across two environments:
 
 | Environment | Subnet name   | CIDR           |
@@ -174,3 +177,6 @@ Now that you tested your feature in the dev environment, it's time to merge it i
 > Don't forget to stop your EC2 instances when you're done to avoid unnecessary charges.
 
 ## Good Luck
+
+
+[poly_yolo_aws]: https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/yolo_network_fursa.png
