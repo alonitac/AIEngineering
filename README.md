@@ -140,7 +140,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/multichoice-questions/linux_processes.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/linux_processes.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1GzeJRsXrZsRqYlXOs9CLDxJ02ikLg8UR/view?usp=drivesdk">2026-06-09</a></td>
 
 </tr>
 
@@ -226,6 +226,9 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a href="tutorials/aws_intro.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
  <td align="center"></td>
+
+
+
 
 </tr>
 
