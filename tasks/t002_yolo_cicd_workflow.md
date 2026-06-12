@@ -57,8 +57,8 @@ Set up a GitHub Actions workflow that automatically deploys the Yolo app to the 
    | `DEV_INSTANCE_SSH_KEY`  | Full contents of the `.pem` key file for dev    |
    | `PROD_INSTANCE_SSH_KEY` | Full contents of the `.pem` key file for prod   |
 
-   > [!NOTE]
-   > When pasting the `.pem` file, include the full text - the `-----BEGIN RSA PRIVATE KEY-----` and `-----END RSA PRIVATE KEY-----` lines are part of the key.
+> [!NOTE]
+> When pasting the `.pem` file, include the full text - the `-----BEGIN RSA PRIVATE KEY-----` and `-----END RSA PRIVATE KEY-----` lines are part of the key.
 
 2. Create `.github/workflows/deploy.yaml` in your repository (this is just an example - you can structure your workflow entirely different if you want):
 
