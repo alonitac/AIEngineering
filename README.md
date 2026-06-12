@@ -232,4 +232,26 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 
 </tr>
 
+
+
+
+
+
+
+
+
+<tr>
+ <td>17</td>
+ <td>AWS</td>
+ <td><a href="tutorials/aws_vpc.md">AWS VPC</a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td></td>
+
+</tr>
+
+
+
 </table>
