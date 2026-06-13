@@ -15,8 +15,8 @@ Create a VPC with **4 public subnets** split across two environments:
 
 | Environment | Subnet name   | CIDR           |
 |-------------|---------------|----------------|
-| Dev         | dev-subnet-1  | 10.0.1.0/24    |
-| Dev         | dev-subnet-2  | 10.0.2.0/24    |
+| Dev         | dev-subnet-1  | 10.0.0.0/24    |
+| Dev         | dev-subnet-2  | 10.0.1.0/24    |
 | Prod        | prod-subnet-1 | 10.0.128.0/24  |
 | Prod        | prod-subnet-2 | 10.0.129.0/24  |
 
