@@ -236,10 +236,10 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 <tr>
  <td>17</td>
  <td>Networking</td>
- <td><a href="tutorials/networking_computer_nets.md">Computer networks</a></td>
+ <td><a href="tutorials/networking_computer_networks.md">Computer networks</a></td>
  <td align="center"></td>
- <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_computer_nets.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
- <td align="center"><a href="tutorials/networking_computer_nets.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_computer_networks.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/networking_computer_networks.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
  <td align="center"></td>
 
