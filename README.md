@@ -264,5 +264,18 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 </tr>
 
 
+<tr>
+ <td>19</td>
+ <td>Networking</td>
+ <td><a href="tutorials/networking_OSI_model.md">The OSI model</a></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/slides/networking_OSI_model.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/slides.png" /></a></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_OSI_model.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/networking_OSI_model.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center">&nbsp;</td>
+
+</tr>
+
+
 
 </table>
