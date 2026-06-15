@@ -241,7 +241,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_computer_nets.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/networking_computer_networks.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1cEcyB-OcrpIuxiWrJQY9GoCKwJE9LSyj/view?usp=sharing">2026-06-14</a></td>
 
 </tr>
 
@@ -276,6 +276,17 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 
 </tr>
 
+
+<tr>
+ <td>20</td>
+ <td>Networking</td>
+ <td><a href="tutorials/networking_security.md">Networks security</a></td>
+ <td align="center"></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_security.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/networking_security.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
 
 
 </table>
