@@ -462,7 +462,8 @@ In our course repo, under `package_integrity_verification/Packages`, you are giv
 
 ### :pencil2: Self-signed Certificate - Enable HTTPS on the YOLO API
 
-In this exercise you will enable HTTPS on the YOLO detection service alongside its existing HTTP server.
+> [!NOTE]
+> This exercise is for learning purposes only. Throughout the course the YOLO service is treated as an **internal** service — it runs inside a private network and is only accessed by other internal components, so plain HTTP is perfectly fine for it. In a later session you will see how public-facing traffic is terminated at a load balancer or reverse proxy, which is where TLS lives in practice.
 
 In real life, a trusted authority (like Amazon, DigiCert) signs your certificates, giving them validity. But for internal or development usage, you can sign the certificate yourself - a **self-signed certificate**. Browsers and `curl` will warn about it, but the encryption is just as strong.
 
@@ -477,20 +478,9 @@ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -sha256 -days 3
 The `-nodes` flag skips the passphrase prompt so uvicorn can load the key without interactive input.
 The program will ask you some identifiable information (country, organisation, Common Name, etc.). Fill in whatever values you like - this is a self-signed cert and no CA will verify them.
 
+#### Step 2 - Start the YOLO app over HTTPS
 
-#### Step 2 - Start the YOLO app on both HTTP and HTTPS
-
-The YOLO app uses **uvicorn** as its underlying server. Uvicorn can serve TLS directly by passing the certificate and key files.
-
-Open two terminals on your EC2 instance.
-
-In the first terminal, start the existing HTTP server (nothing changes here):
-
-```bash
-python app.py          # HTTP on port 8080
-```
-
-In the second terminal, start a second uvicorn process on port **8443** with TLS:
+The YOLO app uses **uvicorn** as its underlying server. Uvicorn can serve TLS directly by passing the certificate and key files:
 
 ```bash
 uvicorn app:app --host 0.0.0.0 --port 8443 \
@@ -501,15 +491,9 @@ uvicorn app:app --host 0.0.0.0 --port 8443 \
 > [!NOTE]
 > Make sure port **8443** is open in your EC2 Security Group for inbound traffic (TCP, your IP or `0.0.0.0/0` for testing).
 
-#### Step 3 - Test both endpoints
+#### Step 3 - Test the HTTPS endpoint
 
-From your **local machine**, verify HTTP still works:
-
-```bash
-curl http://<ec2-public-ip>:8080/health
-```
-
-Now test HTTPS:
+From your **local machine**, call the health endpoint:
 
 ```bash
 curl https://<ec2-public-ip>:8443/health
@@ -521,7 +505,10 @@ Because the certificate is self-signed, `curl` will refuse the connection with a
 curl -k https://<ec2-public-ip>:8443/health
 ```
 
-You should get `{"status":"ok"}` from both endpoints.
+You should get `{"status":"ok"}`.
+
+> [!WARNING]
+> **Stop the HTTPS server when you are done with this exercise.** Do not leave it running as your default way to start the YOLO service. The YOLO service is an **internal** service, in the future you'll see that it is never directly exposed to the internet, so it does not need TLS. 
 
 
 
