@@ -237,6 +237,66 @@ If they match, the user is granted access.
 
 # Exercises
 
+
+
+### :pencil2: Self-signed Certificate - Enable HTTPS on the YOLO API
+
+> [!NOTE]
+> This exercise is for learning purposes only. Throughout the course the YOLO service is treated as an **internal** service — it runs inside a private network and is only accessed by other internal components, so plain HTTP is perfectly fine for it. In a later session you will see how public-facing traffic is terminated at a load balancer or reverse proxy, which is where TLS lives in practice.
+
+In real life, a trusted authority (like Amazon, DigiCert) signs your certificates, giving them validity. But for internal or development usage, you can sign the certificate yourself - a **self-signed certificate**. Browsers and `curl` will warn about it, but the encryption is just as strong.
+
+#### Step 1 - Generate a self-signed certificate
+
+Inside the `services/yolo` directory of your repo, generate a private key and a certificate in one command:
+
+```bash
+openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes
+```
+
+The `-nodes` flag skips the passphrase prompt so uvicorn can load the key without interactive input.
+The program will ask you some identifiable information (country, organisation, Common Name, etc.). Fill in whatever values you like - this is a self-signed cert and no CA will verify them.
+
+#### Step 2 - Start the YOLO app over HTTPS
+
+The YOLO app uses **uvicorn** as its underlying server. Uvicorn can serve TLS directly by passing the certificate and key files:
+
+```bash
+uvicorn app:app --host 0.0.0.0 --port 8443 \
+    --ssl-keyfile key.pem \
+    --ssl-certfile cert.pem
+```
+
+> [!NOTE]
+> Make sure port **8443** is open in your EC2 Security Group for inbound traffic (TCP, your IP or `0.0.0.0/0` for testing).
+
+#### Step 3 - Test the HTTPS endpoint
+
+From your **local machine**, call the health endpoint:
+
+```bash
+curl https://<ec2-public-ip>:8443/health
+```
+
+Because the certificate is self-signed, `curl` will refuse the connection with an SSL error - exactly the same warning a browser would show. Use `-k` (`--insecure`) to bypass certificate verification for testing:
+
+```bash
+curl -k https://<ec2-public-ip>:8443/health
+```
+
+You should get `{"status":"ok"}`.
+
+> [!WARNING]
+> **Stop the HTTPS server when you are done with this exercise.** Do not leave it running as your default way to start the YOLO service. The YOLO service is an **internal** service, in the future you'll see that it is never directly exposed to the internet, so it does not need TLS. 
+
+
+### :pencil2: Authenticity verification
+
+Under `signature_verification/` in our course repo, you are given 5 signatures and the corresponding messages. Determine which of the signatures are authentic.
+
+
+
+
 ### :pencil2: TLS Handshake 
 
 ![][networking_alice_bob]
@@ -441,74 +501,7 @@ Client-Server TLS handshake has been completed successfully
 Well Done! you've manually implemented a secure communication over HTTP! Thanks god we have TLS in real life :-)
 
 
-### :pencil2: Authenticity verification
 
-Under `signature_verification/` in our course repo, you are given 5 signatures and the corresponding messages. Determine which of the signatures are authentic.
-
-
-### :pencil2: Playing with symmetric encryption
-
-1. Encrypt some file using `openssl`
-2. Try to decrypt the encrypted file using a different secret you've used to encrypt. What happened?
-3. Add some text to the encrypted file, then try to decrypt it. What happened? [Read here](https://security.stackexchange.com/questions/9437/does-symmetric-encryption-provide-data-integrity) about how openssl provides data integrity in symmetric encryption.
-4. Encrypt the file again using the same key. Make sure different encryption is generated. Why?
-
-### :pencil2: Verify the integrity of apt-get packages
-
-Debian package verification works by checking the cryptographic hash of the package against the expected value in the package metadata. The package metadata includes the SHA-256 hash of the package contents and is signed by the package maintainer's GPG key.
-
-In our course repo, under `package_integrity_verification/Packages`, you are given the metadata of 2 Debian packages, visit the docker binaries server: https://download.docker.com/linux/ubuntu/, download the binaries (the .deb file) to your machine according to the path specified in `Filename:`, and verify the package integrity using the `SHA512` value.
-
-
-### :pencil2: Self-signed Certificate - Enable HTTPS on the YOLO API
-
-> [!NOTE]
-> This exercise is for learning purposes only. Throughout the course the YOLO service is treated as an **internal** service — it runs inside a private network and is only accessed by other internal components, so plain HTTP is perfectly fine for it. In a later session you will see how public-facing traffic is terminated at a load balancer or reverse proxy, which is where TLS lives in practice.
-
-In real life, a trusted authority (like Amazon, DigiCert) signs your certificates, giving them validity. But for internal or development usage, you can sign the certificate yourself - a **self-signed certificate**. Browsers and `curl` will warn about it, but the encryption is just as strong.
-
-#### Step 1 - Generate a self-signed certificate
-
-Inside the `services/yolo` directory of your repo, generate a private key and a certificate in one command:
-
-```bash
-openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -sha256 -days 365 -nodes
-```
-
-The `-nodes` flag skips the passphrase prompt so uvicorn can load the key without interactive input.
-The program will ask you some identifiable information (country, organisation, Common Name, etc.). Fill in whatever values you like - this is a self-signed cert and no CA will verify them.
-
-#### Step 2 - Start the YOLO app over HTTPS
-
-The YOLO app uses **uvicorn** as its underlying server. Uvicorn can serve TLS directly by passing the certificate and key files:
-
-```bash
-uvicorn app:app --host 0.0.0.0 --port 8443 \
-    --ssl-keyfile key.pem \
-    --ssl-certfile cert.pem
-```
-
-> [!NOTE]
-> Make sure port **8443** is open in your EC2 Security Group for inbound traffic (TCP, your IP or `0.0.0.0/0` for testing).
-
-#### Step 3 - Test the HTTPS endpoint
-
-From your **local machine**, call the health endpoint:
-
-```bash
-curl https://<ec2-public-ip>:8443/health
-```
-
-Because the certificate is self-signed, `curl` will refuse the connection with an SSL error - exactly the same warning a browser would show. Use `-k` (`--insecure`) to bypass certificate verification for testing:
-
-```bash
-curl -k https://<ec2-public-ip>:8443/health
-```
-
-You should get `{"status":"ok"}`.
-
-> [!WARNING]
-> **Stop the HTTPS server when you are done with this exercise.** Do not leave it running as your default way to start the YOLO service. The YOLO service is an **internal** service, in the future you'll see that it is never directly exposed to the internet, so it does not need TLS. 
 
 
 
