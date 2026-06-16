@@ -299,5 +299,27 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"></td>
 </tr>
 
+<tr>
+ <td>22</td>
+ <td>Networking</td>
+ <td><a href="tutorials/networking_dns.md">DNS protocol</a></td>
+ <td align="center"></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_dns.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/networking_dns.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
+<tr>
+ <td>23</td>
+ <td>Cloud (AWS)</td>
+ <td><a href="tutorials/aws_route53.md">AWS DNS service - Route53</a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"><a href="https://youtu.be/u4f1Dmhb-1k">2025-05-07</a><br><a href="https://youtu.be/WkmqM8kb7QE">2025-05-08</a></td>
+</tr>
+
 
 </table>
