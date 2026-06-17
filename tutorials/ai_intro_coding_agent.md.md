@@ -7,9 +7,9 @@ AI coding agents have become standard tools in professional software development
 
 An AI **coding agent** is not just sending a simple prompt to an LLM and getting a response. It's a software system that runs a loop:
 
-```
-[Goal] → [Think] → [Act] → [Observe] → [Think] → [Act] → ... → [Done]
-```
+
+Goal -> Think -> Act -> Observe -> Think -> Act -> ... -> Done
+
 
 You give it a task. It reads files, runs commands, writes code, checks results - all on its own, until the task is done or it asks you for guidance.
 
