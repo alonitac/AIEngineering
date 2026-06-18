@@ -311,6 +311,28 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
 </tr>
 
 
+<tr>
+ <td>23</td>
+ <td>AI</td>
+ <td><a href="tutorials/ai_intro_coding_agent.md">Introduction to AI Coding Agents</a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
+
+<tr>
+ <td>24</td>
+ <td>AI</td>
+ <td><a href="tutorials/ai_agent_skills.md">Agent skills</a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"><a href="tutorials/ai_agent_skills.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
 
 
 </table>
