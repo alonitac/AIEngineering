@@ -307,7 +307,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_dns.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/networking_dns.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1tUc3SDfNLlqsY7O21-3TkXdcR9z6F-o6/view?usp=sharing">2026-06-17</a></td>
 </tr>
 
 
