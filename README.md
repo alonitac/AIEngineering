@@ -330,7 +330,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"></td>
  <td align="center"></td>
  <td align="center"><a href="tutorials/ai_agent_skills.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
- <td align="center"></td>
+ <td align="center"><b>Task T003:</b> <a href="tasks/t003_data_modeling_refactor_skills.md">Yolo API data layer refactor with skills</a></td>
  <td align="center"></td>
 </tr>
 
