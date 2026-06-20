@@ -70,8 +70,6 @@ model_with_tools = model.bind_tools([detect_objects])
 Now, upon the following example user prompt `hey what do you see in the image attached to my message?`, the LLM model (assuming supporting tool calling), based on the conversation context, can return a response containing a specific *request* to invoke this tool function, including the arguments it wants to pass.
 
 
-**Note that tools must be well-documented: informative and concise function’s docstring and typed argument names become part of the model's prompt.**
-
 
 ```python
 response = model_with_tools.invoke("hey what do you see in the image attached to my message? SOME_IMG_BASE64_STRING")
@@ -80,7 +78,11 @@ for tool_call in response.tool_calls:
         tool_response = detect_objects.invoke(tool_call)
 ```
 
-## Agent = Model + Harness
+> [!IMPORTANT]
+> Tools must be well-documented: informative and concise function’s docstring and typed argument names become part of the model's prompt.
+
+
+## Step III: Agent = Model + Harness
 
 
 An AI agent is a model calling tools in a loop until a given task is complete.
@@ -105,7 +107,7 @@ A harness is everything around that loop:
 - Any middleware that shapes its behavior.
 
 
-## Step III: The Agentic Loop
+### The Agentic Loop
 
 Here is a minimal, complete agentic loop:
 
