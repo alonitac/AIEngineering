@@ -8,7 +8,7 @@ In this task you'll refactor the YOLO service's database layer from raw SQLite t
 
 ## Introducing SQLAlchemy
 
-SQLAlchemy is a Python library that lets you interact with databases using Python classes instead of raw SQL strings. It also makes your app **database agnostic** - your code will be run against DQLite in development and Postgres in production, just by changing an environment variable.
+SQLAlchemy is a Python library that lets you interact with databases using Python classes instead of raw SQL strings. It also makes your app **database agnostic** - your code will be run against SQLite in development and Postgres in production, just by changing an environment variable.
 
 ### Modeling the data
 
