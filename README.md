@@ -334,5 +334,16 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"></td>
 </tr>
 
+<tr>
+ <td>25</td>
+ <td>AI</td>
+ <td><a href="tutorials/ai_langgraph_intro.md">Building AI Agents with LangChain</a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"><a href="tutorials/ai_langgraph_intro.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
 
 </table>
