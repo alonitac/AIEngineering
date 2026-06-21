@@ -253,6 +253,14 @@ In this exercise you should deploy the whole system on your EC2.
 
 - For any required code changes, you must work according to our Git workflow: create a new branch from `main`, make your changes, merge to dev to test it there, create a PR to `main`. 
 
+- To setup the frontend service locally: 
+
+```bash
+cd services/frontend
+npm install   # only needed the first time
+npm run dev
+```
+
 ### :pencil2: Guard Against Infinite Loops
 
 The current `run_agent` loop has no exit condition other than the model stopping tool calls. In theory, a confused model could call tools forever.
