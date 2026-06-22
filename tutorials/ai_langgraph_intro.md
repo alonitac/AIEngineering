@@ -274,6 +274,54 @@ def run_agent(history: list, max_iterations: int = 10) -> str:
 
 You can **manually** test it (in dev env only of course) by temporarily lowering `max_iterations` to `1` and sending a question that requires a tool call.
 
+### :pencil2: Structured output
+
+It's important to work with **validated**, **structured** data - in API responses, in service-to-service communication, and especially with LLMs, where the model can return an unstructured text reponse. 
+
+**Pydantic** is a Python library that solves this. You define a schema as a Python class; Pydantic validates every value against it **at runtime**. FastAPI and LangChain both understand Pydantic natively - FastAPI uses it to type your HTTP responses, LangChain uses it to force the LLM to return valid JSON. [Python Docs](https://docs.pydantic.dev/latest/), visit there at your free time. 
+
+Your task is to define **Pydantic models** for the below three outputs and make sure they are actually used (not just defined).
+
+#### YOLO `/predict` response (`services/yolo/app.py`)
+
+```json
+{
+  "uid": "a1b2c3d4-...",
+  "timestamp": "2026-06-22T10:00:00Z",
+  "original_image": "path/to/original/image.jpg",
+  "predicted_image": "path/to/predicted/image.jpg",
+  "detection_objects": [
+    {
+      "id": 0,
+      "label": "person",
+      "score": 0.95,
+      "box": [x1, y1, x2, y2]
+    }
+  ]
+}
+```
+
+> [!NOTE]
+> Feel free to add any additional fields according to your YOLO service implementation.
+
+
+
+#### Agent `/chat` response (`services/agent/app.py`)
+
+```json
+{
+  "response": "I found 2 objects in the image.",
+  "prediction_id": "a1b2c3...",
+  "annotated_image": "<base64-string or null>",
+  "agent_loop_time_s": 1.84,
+  "iterations": 2,
+  "tools_called": ["detect_objects"],
+  "context_limit_exceeded": false
+}
+```
+
+Some of these values (e.g. `annotated_image`, `prediction_id`) don't come from the LLM - you need to add them yourself as part of your agentic loop. Obviously, some of the values are optional.
+
 
 ### :pencil2: Return the Annotated Image
 
@@ -288,6 +336,64 @@ Make the agent include the annotated image in its response, either always after 
 - You will need to make changes in both the `agent` and the `frontend` services. As the `frontend` service is Next.js/TypeScript (out of the course scope), use AI to navigate and modify it. We strongly recommend you to use "Ask mode" first, let it to explain the relevant changes. Make sure you understand the changes. We recommend install the [official Next.js agent skills](https://github.com/vercel-labs/next-skills). 
 
 
+### :pencil2: Model profiles
+
+Model profiles are dictionaries of supported features for each model. For example, a profile for a model might look like this:
+
+```python
+model = init_chat_model("openai:gpt-5.4-mini")
+
+print(model.profile)
+
+# Output:
+# {
+#   "max_input_tokens": 400000,
+#   "image_inputs": True,
+#   "reasoning_output": True,
+#   "tool_calling": True,
+# }
+```
+
+Much of the model profile data is powered by the [models.dev](https://github.com/sst/models.dev) project, an open source initiative that provides model capability data. 
+
+1. Use model profile to check that your selected model supports the features you need (structured output, tool calling) and raise an error if it doesn't.
+
+2. Model profile has an important information about max input tokens. It's important to check this before sending large inputs to the model.
+
+    You could try to count tokens *before* sending, but that requires the model's exact tokenizer - which is heavy, provider-specific, and sometimes not public. Instead, you can read usage metadata from the response after calling the LLM:
+
+    ```python
+    response = llm.invoke("Explain Docker in one paragraph")
+    print(response.usage_metadata)
+    # {'input_tokens': 12, 'output_tokens': 118, 'total_tokens': 130}
+    ```
+
+    Compare `input_tokens` against `model.profile["max_input_tokens"]` to detect when you're approaching the limit.
+
+    Add a `tokens_used` field to your `/chat` endpoint response:
+
+    ```json
+    {
+    "response": "There are 2 people in the image.",
+    "tokens_used": { "input": 312, "output": 22, "total": 334 }
+    }
+    ```
 
 
+### :pencil2: LLM API rate limits
 
+Many LLM providers impose a limit on the number of request that can be made in a given time period.
+
+Please carefully review [Antrhopic's rate limits](https://platform.claude.com/docs/en/api/rate-limits) and make sure you understand them. 
+
+As seen, if you exceed the rate limit, the API will return a `429 Too Many Requests` error.
+
+LangChain allows you to pass `rate_limiter` property to the `init_chat_model()` function. 
+
+Please [read the docs](https://docs.langchain.com/oss/python/langchain/models#rate-limiting) and implement the `InMemoryRateLimiter` in your agent. Choose realistic values that fit all the models you use in your agent.
+
+
+### :pencil2: Agent API and agentic loop testing
+
+
+https://docs.langchain.com/oss/javascript/langchain/test/unit-testing
