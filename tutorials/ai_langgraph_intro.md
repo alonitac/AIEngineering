@@ -286,18 +286,10 @@ Your task is to define **Pydantic models** for the below two outputs and make su
 
 ```json
 {
-  "uid": "a1b2c3d4-...",
-  "timestamp": "2026-06-22T10:00:00Z",
-  "original_image": "path/to/original/image.jpg",
-  "predicted_image": "path/to/predicted/image.jpg",
-  "detection_objects": [
-    {
-      "id": 0,
-      "label": "person",
-      "score": 0.95,
-      "box": [x1, y1, x2, y2]
-    }
-  ]
+ "prediction_uid": "a1b2c3...", 
+ "detection_count": 3,
+ "labels": ["person", "dog", "cat"],
+ "time_took": "1.23"
 }
 ```
 
