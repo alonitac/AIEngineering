@@ -50,6 +50,14 @@ Default output format [None]: json
 
 This writes your credentials to `~/.aws/credentials` and your config to `~/.aws/config`. When using AWS CLI or AWS SDK through Python, the credentials are automatically picked up from these files - **NO NEED TO COPY THESE VALUES ANYWHERE, EVER, NEVER, NOWHATEVER YOU DO**.
 
+Test your credentials by executing:
+
+```bash
+aws sts get-caller-identity
+```
+
+This command returns details about your AWS user, which indicates a successful communication with the API.
+
 ## Using Bedrock with LangChain
 
 Install the Required Packages
