@@ -93,5 +93,3 @@ print(response.content)
 # Exercises 
 
 ### :pencil2: Use Bedrock in your PolyAI Agent
-
-Do.
