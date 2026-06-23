@@ -15,7 +15,17 @@ To create a role with the right permissions, follow these steps:
 4. On the **Attach permissions policy** page, choose **Create inline policy** (we will write a custom policy - no AWS managed policy covers only specific models)\.
 
 5. On the **Review** page, enter a name for the role and choose **Create role**\.
-6. Attach the role to your EC2 instance. 
+
+6. Attach the role to your EC2 instance:
+
+   - Open the [EC2 console](https://console.aws.amazon.com/ec2/), go to **Instances**, and select your instance.
+   - Choose **Actions - Security - Modify IAM role**.
+   - Select the role you just created and click **Update IAM role**.
+   - No restart required - the role takes effect immediately.
+
+
+   Repeat the same steps for both your **dev** and **prod** instances - each instance needs the role attached individually.
+
 7. Test your policy.
 
 Let's review the created permission JSON:
