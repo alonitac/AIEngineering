@@ -73,6 +73,17 @@ response = model.invoke("Hello!")
 print(response.content)
 ```
 
+## Allowed models 
+
+- `anthropic.claude-3-haiku-20240307-v1:0`,
+- `amazon.nova-micro-v1:0`,
+- `amazon.nova-lite-v1:0`,
+- `openai.gpt-oss-20b-1:0`,
+- `meta.llama3-1-8b-instruct-v1:0`,
+- `mistral.mistral-7b-instruct-v0:2`
+
 # Exercises 
 
 ### :pencil2: Use Bedrock in your PolyAI Agent
+
+Do.
