@@ -280,7 +280,7 @@ It's important to work with **validated**, **structured** data - in API response
 
 **Pydantic** is a Python library that solves this. You define a schema as a Python class; Pydantic validates every value against it **at runtime**. FastAPI and LangChain both understand Pydantic natively - FastAPI uses it to type your HTTP responses, LangChain uses it to force the LLM to return valid JSON. [Python Docs](https://docs.pydantic.dev/latest/), visit there at your free time. 
 
-Your task is to define **Pydantic models** for the below three outputs and make sure they are actually used (not just defined).
+Your task is to define **Pydantic models** for the below two outputs and make sure they are actually used (not just defined).
 
 #### YOLO `/predict` response (`services/yolo/app.py`)
 
