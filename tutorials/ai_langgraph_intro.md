@@ -395,5 +395,10 @@ Please [read the docs](https://docs.langchain.com/oss/python/langchain/models#ra
 
 ### :pencil2: Agent API and agentic loop testing
 
+Write two types of tests:
 
-https://docs.langchain.com/oss/javascript/langchain/test/unit-testing
+1. API test for the agent endpoints (`/chat`, `/health`) - use FastAPI's `TestClient`. You can mock the entier agentic loop (`run_agent()`) to return a pre-defined response, so you don't need to call the LLM or the YOLO service. This is a unit test for the **API layer** only.
+
+2. Unit test for `run_agent()` - follow the [LangChain unit testing docs](https://docs.langchain.com/oss/javascript/langchain/test/unit-testing) to mock the LLM and tool calls. Use `langchain_core.messages` fake responses so tests run without hitting any real API.
+
+3. Integrate your agent tests into the CI workflow. 
