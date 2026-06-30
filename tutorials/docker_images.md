@@ -186,6 +186,35 @@ The final image is `debian:bookworm-slim` (~90 MB) plus one binary. The Go toolc
 
 # Exercises
 
+
+
+## :pencil2: Build and push your project images
+
+In this exercise you will build Docker images for each service in the project - Yolo, Agent, Frontend - and publish them to your personal DockerHub account.
+
+- Go to [hub.docker.com](https://hub.docker.com) and click **Sign up**.
+- You can sign up with your existing **GitHub account** using the "Continue with GitHub" option.
+`
+- Go to [hub.docker.com](https://hub.docker.com) → **Account Settings** → **Personal access tokens** → **Generate new token**.
+- Give the token a name (e.g. `ec2`) and set the permissions to **Read & Write**.
+- Copy the generated token - you won't be able to see it again.
+
+  ```bash
+  docker login --username <your-dockerhub-username> --password <your-token>
+  ```
+
+- The YoloService repository already has a Dockerfile. To build and push it:
+
+  ```bash
+  cd services/yolo
+  docker build -t <your-dockerhub-username>/yolo-service:0.0.1 .
+  docker push <your-dockerhub-username>/yolo-service:0.0.1
+  ```
+
+- Do the same for Agent and Frontend services. Each service has its own Dockerfile in its respective directory.
+
+
+
 ## :pencil2: Optimize the Dockerfile for Layer Caching
 
 The `COPY . .` instruction in the original Dockerfile (Yolo service) copies all source files before installing dependencies.
@@ -215,33 +244,6 @@ Compare image sizes before and after to verify the improvement:
 docker images
 ```
 
-
-## :pencil2: Build and push your project images
-
-In this exercise you will build Docker images for each service in the project - Yolo, Agent, Frontend - and publish them to your personal DockerHub account.
-
-- Go to [hub.docker.com](https://hub.docker.com) and click **Sign up**.
-- You can sign up with your existing **GitHub account** using the "Continue with GitHub" option.
-`
-- Go to [hub.docker.com](https://hub.docker.com) → **Account Settings** → **Personal access tokens** → **Generate new token**.
-- Give the token a name (e.g. `ec2`) and set the permissions to **Read & Write**.
-- Copy the generated token - you won't be able to see it again.
-
-  ```bash
-  docker login --username <your-dockerhub-username> --password <your-token>
-  ```
-
-- The YoloService repository already has a Dockerfile. To build and push it:
-
-  ```bash
-  cd services/yolo
-  docker build -t <your-dockerhub-username>/yolo-service:0.0.1 .
-  docker push <your-dockerhub-username>/yolo-service:0.0.1
-  ```
-
-- Do the same for Agent and Frontend services. Each service has its own Dockerfile in its respective directory.
-
-
 ## :pencil2: Integrate Docker Scout into CI
 
 [Docker Scout](https://docs.docker.com/scout/) scans your images for known security vulnerabilities (CVEs) in OS packages and Python dependencies, and shows you the fix version when one is available. In this exercise you will add a Scout scan step to your GitHub Actions workflow so every push reports the security posture of each image.
@@ -262,3 +264,5 @@ Currently no need to push the image to DockerHub - you just scan it locally in t
 You should store your DockerHub username and personal access token as **GitHub secrets** so the workflow can log in to DockerHub.
 
 Run the workflow and check the output. Did you find any CVEs? Try to fix them. 
+
+
