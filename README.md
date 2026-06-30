@@ -396,6 +396,17 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 </tr>
 
 
+<tr>
+ <td>34</td>
+ <td>Containers</td>
+ <td><a href="tutorials/docker_images.md">Docker images</a></td>
+ <td align="center"></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/docker_images.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
+ <td align="center"><a href="tutorials/docker_images.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
 
 
 </table>
