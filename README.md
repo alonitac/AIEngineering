@@ -397,7 +397,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 
 
 <tr>
- <td>34</td>
+ <td>30</td>
  <td>Containers</td>
  <td><a href="tutorials/docker_images.md">Docker images</a></td>
  <td align="center"></td>
