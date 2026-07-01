@@ -61,6 +61,37 @@ Containers that are connected to the default bridge network inherit the DNS sett
 Containers that attach to a custom network use Docker's embedded DNS server. 
 The embedded DNS server forwards external DNS lookups to the DNS servers configured on the host machine.
 
+### DNS in practice
+
+Consider three `nginx` containers - `c1`, `c2`, `c3` - spread across two custom networks:
+
+![][docker_networking_cnm3]
+
+```bash
+docker network create net-a
+docker network create net-b
+
+docker run -d --name c1 --network net-a nginx
+docker run -d --name c2 --network net-a --network net-b nginx
+docker run -d --name c3 --network net-b nginx
+```
+
+From inside `c1`, you can reach `c2` by name - they share `net-a`:
+
+```bash
+# First install ping inside the container
+docker exec c1 apt update && docker exec c1 apt install -y iputils-ping
+docker exec c1 ping c2   # works
+```
+
+`c3` is not on `net-a`, so `c1` cannot resolve or reach it at all:
+
+```bash
+docker exec c1 ping c3   # fails - unknown host
+```
+
+Docker's embedded DNS only resolves container names **within the same network**. Network boundaries enforce both routing isolation and name isolation.
+
 
 # Containers storage
 
@@ -209,3 +240,4 @@ In rootless mode, the Docker daemon and all containers run entirely within the u
 [docker_sandbox]: https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/docker_sandbox.png
 [docker_cache]: https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/docker_cache.png
 [docker_nginx_frontend_catalog]: https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/docker_nginx_frontend_catalog.png
+[docker_networking_cnm3]: https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/slides/media/docker_networking_cnm3.png
