@@ -433,7 +433,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 <tr>
  <td>33</td>
  <td>Git</td>
- <td><a href="tutorials/git_merge_conflicts.md">Git conflicts</a></td>
+ <td><a href="tutorials/git_merge_conflict.md">Git conflicts</a></td>
  <td></td>
  <td></td>
  <td align="center"></td>
