@@ -2,10 +2,12 @@
 
 ## Overview
 
-In this task you'll extend the PolyAI service with image processing capabilities, wire up structured logging and metrics, and run the entire system with a single `docker-compose.yaml`.
+In this task you'll extend the PolyAI service with image processing capabilities, set up monitoring solution for you ec2 instances, and run the entire system with a single `docker-compose.yaml`.
 
 
-## Digital image processing
+## Part I: Image processing capabilities for the agent
+
+### Digital image processing
 
 Reference: https://ai.stanford.edu/~syyeung/cvweb/tutorial1.html
 
@@ -39,7 +41,7 @@ Filters can be used to remove noise, sharpen edges, blur or smooth the image, or
 Python-wise, image filtering is as simple as manipulate the pixel values. 
 
 
-## Image processing MCP Server
+### Image processing MCP Server
 
 Under `services/img-proc-mcp`, create an MCP server app that exposes image manipulation tools. The agent will use these tools to process images or specific regions of images on demand.
 
@@ -78,7 +80,7 @@ pip install "mcp[cli]" pillow
 mcp dev app.py
 ```
 
-### Tools to implement
+#### Tools to implement
 
 Below is the full list your MCP server should support:
 
@@ -91,7 +93,7 @@ Below is the full list your MCP server should support:
 | `crop` | Crop a region by bounding box coordinates |
 | `add_noise` | Add salt-and-pepper noise |
 
-### Connect to the agent
+#### Connect to the agent
 
 Register the MCP server with your agent. The agent should now be able to handle natural-language prompts such as:
 
@@ -101,49 +103,34 @@ Register the MCP server with your agent. The agent should now be able to handle 
 
 For object-specific operations (e.g. "the second dog"), the agent should call the Yolo API to get bounding boxes, extract that region, apply the transformation, and return the result.
 
-### Notes 
+#### Notes
 
 - You should think what's better approach for the agent to communicate with the MCP server - sending the image in the request or use S3 as a storage layer? Send the entire image or just the relevant bounding box area?
 - The MCP server should be covered by tests. 
 - You might need to add some local tools to the agent to call relevant endpoints in the Yolo service. 
 
-## Observability
+## Part II: Observability
 
-### Background: how Prometheus collects data
+As said in class, Prometheus works by **scraping**, i.e. it periodically sends an HTTP GET to a `/metrics` endpoint on each target and reads the numbers. In such way, you can monitor with Prometheus many different targets - your own applications, the operating system, databases, cloud services, and more. All you need is a `/metrics` endpoint that exposes the data in Prometheus format.
 
-Prometheus works by **scraping** — it periodically sends an HTTP GET to a `/metrics` endpoint on each target and reads the numbers. The target is responsible for exposing that endpoint; Prometheus does not push anything into your service.
+But what if your target-to-be-monitored does not natively expose a `/metrics` endpoint?
+**Exporters** are small programs that bridge this gap. They sit next to the thing you want to monitor, collect its data (via an API, a file, execute command or any oher way), convert it to the Prometheus text format, and serve it on a `/metrics` endpoint for Prometheus to scrape.
 
-**Exporters** are small programs that bridge this gap for software that does not natively speak Prometheus. They sit next to the thing you want to monitor, collect its data (via an API, a file, a socket, …), convert it to the Prometheus text format, and serve it on a `/metrics` endpoint for Prometheus to scrape.
+A great example is your Ubuntu EC2 - you want to monitor CPU, memory, disk, network, etc. But Ubuntu does not expose a `/metrics` endpoint. So you run [**Node Exporter**](https://prometheus.io/docs/guides/node-exporter/) - a tool someone wrote that reads data from your Linux and exposes it in Prometheus format.
 
-```
-Your App / OS / DB
-       │  (native API or files)
-       ▼
-   [Exporter]  ──── /metrics ────▶  Prometheus  ────▶  Grafana
-```
 
-Examples of exporters from the Prometheus ecosystem:
-| Exporter | What it monitors |
-|---|---|
-| **Node Exporter** | Linux host: CPU, memory, disk, network |
-| **cAdvisor** | Docker container resource usage |
-| **Postgres Exporter** | PostgreSQL query stats, connections |
-| **Blackbox Exporter** | HTTP/DNS/TCP probes (is the endpoint up?) |
+Here you can find a list of [Prometheus Exporters](https://prometheus.io/docs/instrumenting/exporters/).
 
-**Node Exporter** specifically reads from `/proc` and `/sys` — the Linux kernel's virtual filesystems that expose real-time OS statistics — and converts them into Prometheus metrics such as `node_cpu_seconds_total`, `node_memory_MemAvailable_bytes`, and `node_filesystem_avail_bytes`. Running it as a container is fine for most use cases; you pass `--path.rootfs=/host` and mount the host's root filesystem so it can read the kernel files.
-
-For your own application (PolyAI), you do not need a separate exporter — you add a `/metrics` endpoint directly inside the FastAPI app using `prometheus-fastapi-instrumentator`. That library instruments every route automatically and exposes HTTP request counts, latencies, and error rates in Prometheus format.
 
 ### Metrics with Prometheus and Grafana
 
-- Run **Prometheus** and **Grafana** as Docker containers.
-- Run **Node Exporter** as a Docker container to expose host-level metrics (CPU, memory, disk).
-- Configure Prometheus to scrape Node Exporter and the PolyAI service (add a `/metrics` endpoint to the PolyAI service using `prometheus-fastapi-instrumentator` or equivalent).
-- In Grafana, import the community **Node Exporter Full** dashboard (ID **1860**) to get host-level visibility instantly: `Dashboards → Import → enter 1860`. It covers CPU usage, memory, disk I/O, network throughput, and more with no manual configuration.
-- In Grafana, create a **custom** dashboard showing at minimum: request rate, error rate, and response latency for the PolyAI service (these come from the `/metrics` endpoint you added to the app, not from Node Exporter).
+- Run **Prometheus** and **Grafana** and [**Node Exporter**](https://hub.docker.com/r/prom/node-exporter) as Docker containers.
+
+- Configure Prometheus to scrape Node Exporter and the PolyAI service.
+- In Grafana, import the community **Node Exporter Full** dashboard (ID **1860**) to get host-level visibility. 
 
 
-## Service containerization
+## Part III: Service containerization
 
 ### Docker Compose
 
@@ -169,14 +156,22 @@ docker compose up
 Replace your existed deployment pipeline as follows:
 
 - The pipeline first should build and push a Docker image to DockerHub.  
-  Every code change should trigger a new build and push and create a new image tag. Use the Git commit SHA (`${{ github.sha }}`) or a timestamp (`$(date +%Y%m%d%H%M%S)`) to generate a unique tag per build. **Never tag images as `latest`**.
+  Every code change (either in `dev` or `main`) should trigger a new build with **a new image tag**. You can use the Git commit SHA (`${{ github.sha }}`) or a timestamp (`$(date +%Y%m%d%H%M%S)`) to generate a unique tag per build. **Never tag images as `latest` or the same tag for different build runs**.
 
-- You should no longer run apps as a Linux service. Stack runs the entirely with a single `docker compose up` command.
+- You should no longer run apps as a Linux service or have any source code deployed directly. Stack runs the entirely with a single `docker compose up -d` command.
 
 - A simple skeleton of the workflow file should look like this: 
 
 
   ```yaml
+  # .github/worflows/deploy.yaml
+  name: Deploy PolyAI Stack
+  on:
+    push:
+      branches:
+        - dev
+        - main
+
   jobs:
     build:
       # Build and push the Docker image to DockerHub
