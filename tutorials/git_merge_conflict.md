@@ -9,7 +9,7 @@ A **merge conflict** happens when Git can't automatically combine changes from t
 Git pauses the merge and marks the conflicts for you to resolve manually.
 
 
-## create a merge conflict
+## Create a merge conflict
 
 ```bash
 # Start from dev branch
@@ -43,7 +43,8 @@ Open VS Code. You'll see:
 
 - **Source Control** panel shows a **Merge Changes** section with the conflicted file(s)
 
-> **Note:** If the **Merge Changes** section doesn't appear, click the **Refresh** button (↻) at the top of the Source Control panel. You can find it by opening the Source Control panel (`Ctrl+Shift+G`), then looking at the top bar of the panel next to the title "Source Control".
+> [!Note] 
+> If the **Merge Changes** section doesn't appear, click the **Refresh** button (↻) at the top of the Source Control panel. You can find it by opening the Source Control panel (`Ctrl+Shift+G`), then looking at the top bar of the panel next to the title "Source Control".
 
 Open the conflicted file and you'll see **conflict markers**:
 
