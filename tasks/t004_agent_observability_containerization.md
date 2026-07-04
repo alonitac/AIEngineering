@@ -49,7 +49,7 @@ Under `services/img-proc-mcp`, create an MCP server app that exposes image manip
 # services/img-proc-mcp/app.py
 import base64
 import io
-from mcp.server.fastmcp import FastMCP
+from fastmcp import FastMCP
 from PIL import Image, ImageFilter
 
 mcp = FastMCP("img-proc")
