@@ -70,7 +70,7 @@ def blur(image_b64: str, radius: float = 2.0) -> str:
 
 
 if __name__ == "__main__":
-    mcp.run()
+    mcp.run(transport="http", port=9000)
 ```
 
 Run it locally to verify the tools are registered:
