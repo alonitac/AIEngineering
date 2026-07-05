@@ -442,4 +442,16 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 </tr>
 
 
+<tr>
+ <td>34</td>
+ <td>AI</td>
+ <td><a href="tutorials/ai_mcp.md">MCP protocol</a></td>
+ <td></td>
+ <td></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
+
 </table>
