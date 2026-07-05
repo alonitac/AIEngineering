@@ -34,7 +34,7 @@ That's exactly what **MCP** is.
 
 
 
-The protocol covers:
+[The protocol](https://modelcontextprotocol.io/specification) covers:
 - **Tool discovery** - the client asks "what tools do you have?"
 - **Tool invocation** - the client calls a tool with arguments
 - **Results** - the server returns the tool output
