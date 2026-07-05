@@ -168,7 +168,7 @@ async with MultiServerMCPClient({
 ```
 
 
-## Use MCP server in VSCode Copilot Chat
+## Talk with MCP servers in VSCode Copilot Chat
 
 VSCode Copilot is itself an MCP client. Create a `.vscode/mcp.json` file in your project to register MCP servers — Copilot picks it up automatically.
 
