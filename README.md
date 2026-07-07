@@ -454,4 +454,19 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 </tr>
 
 
+<tr>
+ <td>35</td>
+ <td>AI</td>
+ <td><a href="tutorials/k8s_cluster_setup.md">Kubernetes cluster setup</a></td>
+ <td></td>
+ <td><a href="tutorials/k8s_cluster_setup.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
+
+
+
+
 </table>
