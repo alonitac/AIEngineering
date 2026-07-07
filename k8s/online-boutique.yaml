@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: emailservice
+  labels:
+    app: emailservice
 spec:
   selector:
     matchLabels:
@@ -11,7 +13,7 @@ spec:
       labels:
         app: emailservice
     spec:
-      serviceAccountName: default
+      serviceAccountName: emailservice
       terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
@@ -27,7 +29,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.0
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/emailservice:v0.10.5
         ports:
         - containerPort: 8080
         env:
@@ -45,16 +47,18 @@ spec:
             port: 8080
         resources:
           requests:
-            cpu: 50m
-
+            cpu: 100m
+            memory: 64Mi
           limits:
-            cpu: 50m
-
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: emailservice
+  labels:
+    app: emailservice
 spec:
   type: ClusterIP
   selector:
@@ -64,10 +68,17 @@ spec:
     port: 5000
     targetPort: 8080
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: emailservice
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: checkoutservice
+  labels:
+    app: checkoutservice
 spec:
   selector:
     matchLabels:
@@ -77,7 +88,7 @@ spec:
       labels:
         app: checkoutservice
     spec:
-      serviceAccountName: default
+      serviceAccountName: checkoutservice
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
@@ -92,7 +103,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: gcr.io/google-samples/microservices-demo/checkoutservice:v0.8.0
+          image: us-central1-docker.pkg.dev/google-samples/microservices-demo/checkoutservice:v0.10.5
           ports:
           - containerPort: 5050
           readinessProbe:
@@ -118,16 +129,18 @@ spec:
             value: "cartservice:7070"
           resources:
             requests:
-              cpu: 50m
-
+              cpu: 100m
+              memory: 64Mi
             limits:
-              cpu: 50m
-
+              cpu: 200m
+              memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: checkoutservice
+  labels:
+    app: checkoutservice
 spec:
   type: ClusterIP
   selector:
@@ -137,10 +150,17 @@ spec:
     port: 5050
     targetPort: 5050
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: checkoutservice
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: recommendationservice
+  labels:
+    app: recommendationservice
 spec:
   selector:
     matchLabels:
@@ -150,7 +170,7 @@ spec:
       labels:
         app: recommendationservice
     spec:
-      serviceAccountName: default
+      serviceAccountName: recommendationservice
       terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
@@ -166,7 +186,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/recommendationservice:v0.8.0
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/recommendationservice:v0.10.5
         ports:
         - containerPort: 8080
         readinessProbe:
@@ -186,16 +206,18 @@ spec:
           value: "1"
         resources:
           requests:
-            cpu: 50m
-
+            cpu: 100m
+            memory: 220Mi
           limits:
-            cpu: 50m
-
+            cpu: 200m
+            memory: 450Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: recommendationservice
+  labels:
+    app: recommendationservice
 spec:
   type: ClusterIP
   selector:
@@ -205,10 +227,17 @@ spec:
     port: 8080
     targetPort: 8080
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: recommendationservice
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
+  labels:
+    app: frontend
 spec:
   selector:
     matchLabels:
@@ -220,7 +249,7 @@ spec:
       annotations:
         sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:
-      serviceAccountName: default
+      serviceAccountName: frontend
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
@@ -235,7 +264,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: gcr.io/google-samples/microservices-demo/frontend:v0.8.0
+          image: us-central1-docker.pkg.dev/google-samples/microservices-demo/frontend:v0.10.5
           ports:
           - containerPort: 8080
           readinessProbe:
@@ -271,6 +300,8 @@ spec:
             value: "checkoutservice:5050"
           - name: AD_SERVICE_ADDR
             value: "adservice:9555"
+          - name: SHOPPING_ASSISTANT_SERVICE_ADDR
+            value: "shoppingassistantservice:80"
           # # ENV_PLATFORM: One of: local, gcp, aws, azure, onprem, alibaba
           # # When not set, defaults to "local" unless running in GKE, otherwies auto-sets to gcp
           # - name: ENV_PLATFORM
@@ -279,20 +310,24 @@ spec:
             value: "0"
           # - name: CYMBAL_BRANDING
           #   value: "true"
+          # - name: ENABLE_ASSISTANT
+          #   value: "true"
           # - name: FRONTEND_MESSAGE
           #   value: "Replace this with a message you want to display on all pages."
           resources:
             requests:
-              cpu: 50m
-
+              cpu: 100m
+              memory: 64Mi
             limits:
-              cpu: 50m
-
+              cpu: 200m
+              memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: frontend
+  labels:
+    app: frontend
 spec:
   type: ClusterIP
   selector:
@@ -302,10 +337,32 @@ spec:
     port: 80
     targetPort: 8080
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-external
+  labels:
+    app: frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend
+  ports:
+  - name: http
+    port: 80
+    targetPort: 8080
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: frontend
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: paymentservice
+  labels:
+    app: paymentservice
 spec:
   selector:
     matchLabels:
@@ -315,7 +372,7 @@ spec:
       labels:
         app: paymentservice
     spec:
-      serviceAccountName: default
+      serviceAccountName: paymentservice
       terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
@@ -331,7 +388,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/paymentservice:v0.8.0
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/paymentservice:v0.10.5
         ports:
         - containerPort: 50051
         env:
@@ -347,16 +404,18 @@ spec:
             port: 50051
         resources:
           requests:
-            cpu: 50m
-
+            cpu: 100m
+            memory: 64Mi
           limits:
-            cpu: 50m
-
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: paymentservice
+  labels:
+    app: paymentservice
 spec:
   type: ClusterIP
   selector:
@@ -366,10 +425,17 @@ spec:
     port: 50051
     targetPort: 50051
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: paymentservice
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: productcatalogservice
+  labels:
+    app: productcatalogservice
 spec:
   selector:
     matchLabels:
@@ -379,7 +445,7 @@ spec:
       labels:
         app: productcatalogservice
     spec:
-      serviceAccountName: default
+      serviceAccountName: productcatalogservice
       terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
@@ -395,7 +461,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/productcatalogservice:v0.8.0
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/productcatalogservice:v0.10.5
         ports:
         - containerPort: 3550
         env:
@@ -411,16 +477,18 @@ spec:
             port: 3550
         resources:
           requests:
-            cpu: 50m
-
+            cpu: 100m
+            memory: 64Mi
           limits:
-            cpu: 50m
-
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: productcatalogservice
+  labels:
+    app: productcatalogservice
 spec:
   type: ClusterIP
   selector:
@@ -430,10 +498,17 @@ spec:
     port: 3550
     targetPort: 3550
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: productcatalogservice
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cartservice
+  labels:
+    app: cartservice
 spec:
   selector:
     matchLabels:
@@ -443,7 +518,7 @@ spec:
       labels:
         app: cartservice
     spec:
-      serviceAccountName: default
+      serviceAccountName: cartservice
       terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
@@ -459,7 +534,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/cartservice:v0.8.0
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/cartservice:v0.10.5
         ports:
         - containerPort: 7070
         env:
@@ -467,11 +542,11 @@ spec:
           value: "redis-cart:6379"
         resources:
           requests:
-            cpu: 50m
-
+            cpu: 200m
+            memory: 64Mi
           limits:
-            cpu: 50m
-
+            cpu: 300m
+            memory: 128Mi
         readinessProbe:
           initialDelaySeconds: 15
           grpc:
@@ -486,6 +561,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: cartservice
+  labels:
+    app: cartservice
 spec:
   type: ClusterIP
   selector:
@@ -495,10 +572,17 @@ spec:
     port: 7070
     targetPort: 7070
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: cartservice
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: loadgenerator
+  labels:
+    app: loadgenerator
 spec:
   selector:
     matchLabels:
@@ -511,7 +595,7 @@ spec:
       annotations:
         sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:
-      serviceAccountName: default
+      serviceAccountName: loadgenerator
       terminationGracePeriodSeconds: 5
       restartPolicy: Always
       securityContext:
@@ -524,12 +608,20 @@ spec:
         - /bin/sh
         - -exc
         - |
-          echo "Init container pinging frontend: ${FRONTEND_ADDR}..."
-          STATUSCODE=$(wget --server-response http://${FRONTEND_ADDR} 2>&1 | awk '/^  HTTP/{print $2}')
-          if test $STATUSCODE -ne 200; then
-              echo "Error: Could not reach frontend - Status code: ${STATUSCODE}"
-              exit 1
-          fi
+          MAX_RETRIES=12
+          RETRY_INTERVAL=10
+          for i in $(seq 1 $MAX_RETRIES); do
+            echo "Attempt $i: Pinging frontend: ${FRONTEND_ADDR}..."
+            STATUSCODE=$(wget --server-response http://${FRONTEND_ADDR} 2>&1 | awk '/^  HTTP/{print $2}')
+            if [ $STATUSCODE -eq 200 ]; then
+                echo "Frontend is reachable."
+                exit 0
+            fi
+            echo "Error: Could not reach frontend - Status code: ${STATUSCODE}"
+            sleep $RETRY_INTERVAL
+          done
+          echo "Failed to reach frontend after $MAX_RETRIES attempts."
+          exit 1
         name: frontend-check
         securityContext:
           allowPrivilegeEscalation: false
@@ -551,24 +643,33 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/loadgenerator:v0.8.0
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/loadgenerator:v0.10.5
         env:
         - name: FRONTEND_ADDR
           value: "frontend:80"
         - name: USERS
           value: "10"
+        - name: RATE
+          value: "1"
         resources:
           requests:
-            cpu: 50m
-
+            cpu: 300m
+            memory: 256Mi
           limits:
-            cpu: 50m
-
+            cpu: 500m
+            memory: 512Mi
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: loadgenerator
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: currencyservice
+  labels:
+    app: currencyservice
 spec:
   selector:
     matchLabels:
@@ -578,7 +679,7 @@ spec:
       labels:
         app: currencyservice
     spec:
-      serviceAccountName: default
+      serviceAccountName: currencyservice
       terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
@@ -594,7 +695,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/currencyservice:v0.8.0
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/currencyservice:v0.10.5
         ports:
         - name: grpc
           containerPort: 7000
@@ -611,16 +712,18 @@ spec:
             port: 7000
         resources:
           requests:
-            cpu: 50m
-
+            cpu: 100m
+            memory: 64Mi
           limits:
-            cpu: 50m
-
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: currencyservice
+  labels:
+    app: currencyservice
 spec:
   type: ClusterIP
   selector:
@@ -630,10 +733,17 @@ spec:
     port: 7000
     targetPort: 7000
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: currencyservice
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: shippingservice
+  labels:
+    app: shippingservice
 spec:
   selector:
     matchLabels:
@@ -643,7 +753,7 @@ spec:
       labels:
         app: shippingservice
     spec:
-      serviceAccountName: default
+      serviceAccountName: shippingservice
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
@@ -658,7 +768,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/shippingservice:v0.8.0
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/shippingservice:v0.10.5
         ports:
         - containerPort: 50051
         env:
@@ -675,16 +785,18 @@ spec:
             port: 50051
         resources:
           requests:
-            cpu: 50m
-
+            cpu: 100m
+            memory: 64Mi
           limits:
-            cpu: 50m
-
+            cpu: 200m
+            memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: shippingservice
+  labels:
+    app: shippingservice
 spec:
   type: ClusterIP
   selector:
@@ -694,10 +806,17 @@ spec:
     port: 50051
     targetPort: 50051
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: shippingservice
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: redis-cart
+  labels:
+    app: redis-cart
 spec:
   selector:
     matchLabels:
@@ -737,11 +856,11 @@ spec:
           name: redis-data
         resources:
           limits:
-
-            cpu: 50m
+            memory: 256Mi
+            cpu: 125m
           requests:
-            cpu: 50m
-
+            cpu: 70m
+            memory: 200Mi
       volumes:
       - name: redis-data
         emptyDir: {}
@@ -750,6 +869,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-cart
+  labels:
+    app: redis-cart
 spec:
   type: ClusterIP
   selector:
@@ -763,6 +884,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: adservice
+  labels:
+    app: adservice
 spec:
   selector:
     matchLabels:
@@ -772,7 +895,7 @@ spec:
       labels:
         app: adservice
     spec:
-      serviceAccountName: default
+      serviceAccountName: adservice
       terminationGracePeriodSeconds: 5
       securityContext:
         fsGroup: 1000
@@ -788,7 +911,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: gcr.io/google-samples/microservices-demo/adservice:v0.8.0
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/adservice:v0.10.5
         ports:
         - containerPort: 9555
         env:
@@ -796,11 +919,11 @@ spec:
           value: "9555"
         resources:
           requests:
-            cpu: 50m
-
+            cpu: 200m
+            memory: 180Mi
           limits:
-            cpu: 50m
-
+            cpu: 300m
+            memory: 300Mi
         readinessProbe:
           initialDelaySeconds: 20
           periodSeconds: 15
@@ -816,6 +939,8 @@ apiVersion: v1
 kind: Service
 metadata:
   name: adservice
+  labels:
+    app: adservice
 spec:
   type: ClusterIP
   selector:
@@ -824,3 +949,8 @@ spec:
   - name: grpc
     port: 9555
     targetPort: 9555
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: adservice
