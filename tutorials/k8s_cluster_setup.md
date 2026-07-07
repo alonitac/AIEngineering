@@ -40,9 +40,17 @@ Node components run on every node, maintaining running pods and providing the Ku
 
 ### Prepare infrastructure 
 
+### Prepare infrastructure 
 
+1. Before creating the instances, you have to prepare the following resources: 
 
-2. Launch two `t2` or `t3.medium` Ubuntu instances with `30GB` disk, naming them `<your-name>-control-plane` and `<your-name>-worker`. Make sure to attach the `kubeadm-cluster-node-role` role to both instances, and the `kubeadm-cluster-node-sg` security group.
+   - A **VPC** with at least **2 public subnets** in **different AZs**.
+   - **IAM role** to be used by the control-plane node with a minimum of `AmazonEKSClusterPolicy`, `AmazonEBSCSIDriverPolicy` and `AmazonEC2ContainerRegistryReadOnly` policies.
+   - **IAM role** to be used by the worker node with a minimum of `AmazonEKSWorkerNodePolicy`, `AmazonEBSCSIDriverPolicy` and `AmazonEC2ContainerRegistryReadOnly` policies.
+   - **Security group** to be used by the control-plan node with inbound rules that allow SSH connections, and TCP traffic in port `6443` (the port of the `api-server`), and **all traffic** for machine within the cluster (you can use the VPC CIDR as the allowed ip source).   
+   - **Security group** to be used by the worker node with inbound rules that allow SSH connections, and **all traffic** for machine within the cluster (you can use the VPC CIDR as the allowed ip source).   
+
+2. Launch two `t2` or `t3.medium` Ubuntu instances with `20GB` disk, naming them `<your-name>-control-plane` and `<your-name>-worker`.
 
    <details>
    <summary>Step-by-step: launching an EC2 instance</summary>
