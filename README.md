@@ -466,6 +466,16 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 </tr>
 
 
+<tr>
+ <td>36</td>
+ <td>AI</td>
+ <td><a href="tutorials/k8s_core_objects.md">Kubernetes core objects</a></td>
+ <td></td>
+ <td></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
 
 
 
