@@ -450,7 +450,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1v-9JJWik0JLgOQrMfa3zOKD7KQ4Ge3li/view?usp=sharing">2026-07-05</a></td>
 </tr>
 
 
@@ -462,7 +462,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td><a href="tutorials/k8s_cluster_setup.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1u12gY0vevn1k_G_A_HFRkUCe2WFsaVn7/view?usp=sharing">2026-07-07</a></td>
 </tr>
 
 
