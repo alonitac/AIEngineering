@@ -456,7 +456,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 
 <tr>
  <td>35</td>
- <td>AI</td>
+ <td>Orchestration</td>
  <td><a href="tutorials/k8s_cluster_setup.md">Kubernetes cluster setup</a></td>
  <td><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/slides/microservices_intro.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/slides.png" /></a></td>
  <td><a href="tutorials/k8s_cluster_setup.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
@@ -468,7 +468,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 
 <tr>
  <td>36</td>
- <td>AI</td>
+ <td>Orchestration</td>
  <td><a href="tutorials/k8s_core_objects.md">Kubernetes core objects</a></td>
  <td></td>
  <td></td>
