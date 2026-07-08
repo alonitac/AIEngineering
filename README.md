@@ -427,7 +427,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"></td>
  <td align="center"><b>Task T004:</b> <a href="tasks/t004_agent_observability_containerization.md">MCP, observability, containerization</a></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1g9WTFHiAG1kNJrBNofi303weNHekp5mK/view?usp=sharing">2026-07-02</a></td>
 </tr>
 
 <tr>
