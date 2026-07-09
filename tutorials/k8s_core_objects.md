@@ -532,11 +532,11 @@ ConfigMaps can also be consumed as **environment variables**, similarly to how y
 
 Deploy the yolo object-detection API you already know from the Docker tutorials - this time on Kubernetes.
 
-1. Create a `Deployment` named `yolo-service` based on the [`alonithuji/yolo-service:0.0.2`](https://hub.docker.com/r/alonithuji/yolo-service) image. The container listens on port `8080`. Run **2 replicas**.
+1. Create a `Deployment` named `yolo` based on the [`alonithuji/yolo-service:0.0.2`](https://hub.docker.com/r/alonithuji/yolo-service) image (or your own image). The container listens on port `8080`. Run **2 replicas**.
 2. Expose it (internally to the cluster) with a `Service` named `yolo-svc` on port `8080`.
 3. Verify the pods are running and the service has endpoints:
    ```bash
-   kubectl get pods -l app=yolo-service
+   kubectl get pods -l app=yolo
    kubectl describe svc yolo-svc
    ```
 4. Forward the service to your local machine and send a test prediction request:
@@ -548,56 +548,38 @@ Deploy the yolo object-detection API you already know from the Docker tutorials 
    curl -X POST -F "file=@beatles.jpeg" http://<control-plane-ip>:8080/predict
    ```
 
-### :pencil2: Deploy the frontend
+### :pencil2: Deploy the agent & frontend
 
-In this exercise you add the [frontend](https://hub.docker.com/r/alonithuji/yolo-frontend) web UI to your cluster and connect it to the backend.
 
-1. Create a `Deployment` named `yolo-frontend` based on the [`alonithuji/yolo-frontend:0.0.2`](https://hub.docker.com/r/alonithuji/yolo-frontend) image. The container listens on port `3000`.  
-   The frontend discovers the backend via the `YOLO_API_URL` environment variable - set it to `http://yolo-svc:8080` (the Service DNS name from the previous exercise).
-2. Expose it with a `Service` named `yolo-frontend-svc` on port `3000`.
-3. Forward the frontend service and open it in your browser:
-   ```bash
-   kubectl port-forward service/yolo-frontend-svc 3000:3000 --address 0.0.0.0
-   ```
-   Open `http://<your-control-plane-ip>:3000` and upload an image - you should see the detection results returned by the backend.
+1. Create a `Deployment` named `frontend` based on your own image. The container listens on port `3000`.  
+2. Expose it with a `Service` named `frontend-svc` on port `3000`.
 
-### :pencil2: Deploy the agent
 
-In this exercise you deploy your AI agent to the cluster and connect it to the yolo service.
-
-1. Create a `Deployment` named `agent` using your agent's Docker image. The container listens on port `8080`. Set the following environment variables:
-   - `YOLO_API_URL=http://yolo-svc:8080` - so the agent can reach the yolo service by its DNS name.
-2. Expose it with a `Service` named `agent-svc` on port `8080`.
-3. Verify the agent is running:
+3. Create a `Deployment` named `agent` using your agent's Docker image. The container listens on port `8000`. 
+4. Expose it with a `Service` named `agent-svc` on port `8000`.
+5. Verify the agent is running:
    ```bash
    kubectl get pods -l app=agent
    kubectl describe svc agent-svc
    ```
 4. Forward the agent service and send a test chat request:
    ```bash
-   kubectl port-forward service/agent-svc 8080:8080 --address 0.0.0.0
+   kubectl port-forward service/agent-svc 8000:8000 --address 0.0.0.0
    ```
    Then in another terminal:
    ```bash
-   curl -X POST http://<control-plane-ip>:8080/chat \
+   curl -X POST http://<control-plane-ip>:8000/chat \
      -H "Content-Type: application/json" \
-     -d '{"message": "How many people are in the image?"}'
+     -d '{"message": "Hi"}'
    ```
 
 ### :pencil2: Deploy the img-proc-mcp (if already implemented)
 
-If you have already built the image processing MCP server (`services/img-proc-mcp`) in the previous task, deploy it to the cluster as well.
+If you have already built the image processing MCP server (`services/img-proc-mcp`), deploy it to the cluster as well.
 
 1. Build and push the `img-proc-mcp` Docker image to your registry.
-2. Create a `Deployment` named `img-proc-mcp` using that image. The MCP server listens on port `9000`.
-3. Expose it with a `Service` named `img-proc-mcp-svc` on port `9000`.
-4. Update the agent `Deployment` to add the environment variable:
-   - `IMG_PROC_MCP_URL=http://img-proc-mcp-svc:9000/mcp`
-5. Apply the updated manifests and verify the full stack is running:
-   ```bash
-   kubectl get deployments
-   kubectl get services
-   ```
+2. Create a `Deployment` named `img-proc-mcp` using that image.
+3. Expose it with a `Service` named `img-proc-mcp-svc`.
 
 ### :pencil2: Deploy the Monitoring Stack
 
@@ -629,73 +611,6 @@ In this exercise you deploy [Prometheus](https://prometheus.io/) and [Grafana](h
    - Set the URL to `http://prometheus-svc:9090`.
    - Click **Save & Test**.
 9. Send a few prediction requests through the frontend and explore the yolo service metrics in Grafana's **Explore** panel.
-
-
-
-### :pencil2: Expand the cluster
-
-In this exercise you will grow your cluster by adding a second worker node and a second control plane node, simulating a production-grade, highly-available setup.
-
-> [!TIP]
-> To save time, use the prepared AMI `kubeadm-cluster-node-base-img` when launching new instances - it already has `kubeadm`, `kubelet`, `kubectl`, and `cri-o` installed from the setup script above. You only need to launch the instance and run the join command.
-
-#### Add a second worker node
-
-1. Launch a new `t3.medium` Ubuntu instance from the prepared AMI, naming it `<your-name>-worker-2`. Attach the `kubeadm-cluster-node-role` IAM role and the `kubeadm-cluster-node-sg` security group, with a `30 GiB` root volume.
-
-2. On the **control plane node**, generate a fresh join command (valid for 24 hours):
-   ```bash
-   kubeadm token create --print-join-command
-   ```
-
-3. SSH into `worker-2` and run the printed `kubeadm join ...` command as root, adding the `--cri-socket` flag:
-   ```bash
-   sudo <paste the join command here> --cri-socket unix:///var/run/crio/crio.sock
-   ```
-
-4. Back on the control plane, confirm the new node appears and eventually reaches `Ready`:
-   ```bash
-   kubectl get nodes -o wide
-   ```
-
-
-#### Add a second control plane node
-
-A single control plane is a single point of failure - if it goes down, the entire cluster API becomes unreachable.
-Adding a second control plane node makes the cluster highly available.
-
-1. Launch another `t3.medium` Ubuntu instance from the prepared AMI, naming it `<your-name>-control-plane-2`. Attach the same IAM role and security group as above.
-
-2. On the **existing control plane**, upload the certificates so the new control plane node can share them, and generate a join command with the `--control-plane` flag:
-   ```bash
-   sudo kubeadm init phase upload-certs --upload-certs
-   ```
-   This prints a `--certificate-key`. Use it together with the regular join command:
-   ```bash
-   kubeadm token create --print-join-command
-   ```
-
-
-3. SSH into `control-plane-2` and run the combined join command as root: 
-
- ```bash
-   sudo <join command> --control-plane --certificate-key <certificate-key> --cri-socket unix:///var/run/crio/crio.sock
-   ```
-
-4. Once it completes, set up `kubectl` on the new node as well:
-   ```bash
-   mkdir -p $HOME/.kube
-   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-   sudo chown $(id -u):$(id -g) $HOME/.kube/config
-   ```
-
-5. From either control plane node, verify all nodes are present:
-   ```bash
-   kubectl get nodes -o wide
-   ```
-   Both control plane nodes should show the `control-plane` role.
-
-6. Stop (do **not** terminate) your original control plane instance from the AWS console. Can you still run `kubectl` commands from `control-plane-2`? What does this tell you about HA control planes?
 
 
 
