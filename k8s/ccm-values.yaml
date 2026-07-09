@@ -1,0 +1,5 @@
+args:
+  - --v=2
+  - --cloud-provider=aws
+  - --cluster-name=<your-name>
+  - --configure-cloud-routes=false

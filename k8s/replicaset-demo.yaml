@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: yolo-rs
+  labels:
+    app: yolo-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: yolo-service
+  template:
+    metadata:
+      labels:
+        app: yolo-service
+    spec:
+      containers:
+      - name: server
+        image: docker.io/alonithuji/yolo-service:0.0.1
+        ports:
+        - containerPort: 8080

@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-service
+  labels:
+    app: yolo-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolo-service
+  template:
+    metadata:
+      labels:
+        app: yolo-service
+    spec:
+      containers:
+      - name: server
+        image: alonithuji/yolo-service:0.0.1
+        resources:
+          requests:
+            cpu: 1000m
+            memory: 400Mi
+          limits:
+            cpu: 2000m
+            memory: 800Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolo-svc
+spec:
+  selector:
+    app: yolo-service
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080

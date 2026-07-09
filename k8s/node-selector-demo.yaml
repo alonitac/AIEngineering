@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-service
+  labels:
+    app: yolo-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolo-service
+  template:
+    metadata:
+      labels:
+        app: yolo-service
+    spec:
+      nodeSelector:
+        gpu: "true"   # Kubernetes only schedules the Pod onto nodes that have the label you specify
+      containers:
+      - name: server
+        image: alonithuji/yolo-service:0.0.1
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 200m
+            memory: 200Mi
+        livenessProbe:
+          initialDelaySeconds: 10
+          httpGet:
+            path: "/health"
+            port: 8080
+        readinessProbe:
+          initialDelaySeconds: 10
+          httpGet:
+            path: "/health"
+            port: 8080

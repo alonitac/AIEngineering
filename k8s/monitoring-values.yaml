@@ -1,0 +1,17 @@
+prometheus:
+  prometheusSpec:
+    retention: 15d          # keep 15 days of metrics
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: ebs-sc
+          resources:
+            requests:
+              storage: 10Gi
+
+grafana:
+  adminPassword: "your-secure-password"
+  persistence:
+    enabled: true
+    storageClassName: ebs-sc
+    size: 2Gi

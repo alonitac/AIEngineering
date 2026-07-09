@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: yolo-service
+  labels:
+    app: yolo-service
+    env: prod
+spec:
+  containers:
+  - name: server
+    image: docker.io/alonithuji/yolo-service:0.0.2
+    ports:
+    - containerPort: 8080
