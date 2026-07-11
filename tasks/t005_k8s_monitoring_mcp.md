@@ -3,16 +3,10 @@
 
 ## Overview
 
-The full PolyAI stack (Yolo, Agent, Frontend, img-proc-mcp, Prometheus, Grafana, Node Exporter) runs on EC2 via Docker Compose. This task migrates it to Kubernetes and adds observability tooling.
-
-1. Deploy the full stack to Kubernetes - `dev` and `prod` namespaces.
-2. Ship container logs from the EC2 deployment to S3.
-3. Build a local MCP server to query logs and metrics from Copilot Chat.
-4. Build Grafana dashboards for Bedrock/CloudWatch and for the agent.
-5. **(Bonus)** Give the agent persistent memory with PostgreSQL and Pinecone.
+The PolyAI stack (Yolo, Agent, Frontend, img-proc-mcp, Prometheus, Grafana, Node Exporter) runs on EC2 via Docker Compose. This task migrates it to Kubernetes and adds observability tooling.
 
 > [!IMPORTANT]
-> **Keep the EC2 + Docker Compose deployment running.** It is the live system. The Kubernetes cluster is a parallel migration target. Both deployments run simultaneously throughout this task.
+> **Keep the EC2 deployment running. Don't delete it even if your cluster is up and running**. The Kubernetes cluster will be the main deployment in future tasks. Both deployments run simultaneously throughout this task.
 
 
 ## Part I: Deploy the Full Stack to Kubernetes
