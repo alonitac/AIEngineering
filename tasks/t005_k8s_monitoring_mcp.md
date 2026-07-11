@@ -3,37 +3,31 @@
 
 ## Overview
 
-The full PolyAI stack (Yolo, Agent, Frontend, img-proc-mcp, Prometheus, Grafana, Node Exporter) runs on EC2 via Docker Compose. This task migrates it to Kubernetes and adds observability tooling.
-
-1. Deploy the full stack to Kubernetes - `dev` and `prod` namespaces.
-2. Ship container logs from the EC2 deployment to S3.
-3. Build a local MCP server to query logs and metrics from Copilot Chat.
-4. Build Grafana dashboards for Bedrock/CloudWatch and for the agent.
-5. **(Bonus)** Give the agent persistent memory with PostgreSQL and Pinecone.
+The PolyAI stack (Yolo, Agent, Frontend, img-proc-mcp, Prometheus, Grafana, Node Exporter) runs on EC2 via Docker Compose. This task migrates it to Kubernetes and adds observability tooling.
 
 > [!IMPORTANT]
-> **Keep the EC2 + Docker Compose deployment running.** It is the live system. The Kubernetes cluster is a parallel migration target. Both deployments run simultaneously throughout this task.
+> **Keep the EC2 deployment running. Don't delete it even if your cluster is up and running**. The Kubernetes cluster will be the main deployment in future tasks. Both deployments run simultaneously throughout this task.
 
 
-## Part I: Deploy the Full Stack to Kubernetes
+## Part I: Deploy the stack to Kubernetes
 
-Deploy every service from your Docker Compose stack to Kubernetes in both `dev` and `prod` namespaces. Put your Kubernetes manifests under `infra/k8s/` in your project repo.
+Deploy every service from your Docker Compose stack to Kubernetes in both `dev` and `prod` namespaces (`kubectl create ns dev|prod` to create a namespace in k8s). Put your Kubernetes manifests under `infra/k8s/` in your project repo.
 
 > [!IMPORTANT]
-> **Use plain `Deployment` objects for every service - including Prometheus and Grafana.** Do not use Helm charts or operators for this task. The goal is to understand how Kubernetes objects connect to each other and to AWS storage.
+> **Use plain `Deployment` objects for every service - including Prometheus and Grafana.** Do not use Helm charts or operators for this task. The goal is to understand how Kubernetes objects connect to each other.
 
 
-Add all three to every service Deployment:
+Bonus - add these three to your Yolo, Agent and Frontend deployment:
 
-1. **Liveness & Readiness probes** - HTTP probes on each service's `/health` endpoint. Reference: `k8s/liveness-demo.yaml`, `k8s/readiness-demo.yaml`.
-2. **Resource requests & limits** - CPU and memory bounds per container. Reference: `k8s/resources-demo.yaml`.
-3. **Horizontal Pod Autoscaler** - HPA for `yolo` targeting 50% CPU, `minReplicas: 1`, `maxReplicas: 5`. Reference: `k8s/hpa-demo.yaml`. you must test the HPA by sending a load of requests to the yolo service and observing the number of replicas increase.
+1. **Liveness & Readiness probes** - HTTP probes to check if the service is healthy and ready.
+2. **Resource requests & limits** - CPU and memory bounds per container.
+3. **Horizontal Pod Autoscaler** - HPA targeting 50% CPU, `minReplicas: 1`, `maxReplicas: 3`. You must test the HPA by sending a load of requests to the yolo service and observing the number of replicas increase.
 
 
 Prometheus needs durable storage so metrics survive pod restarts. This requires wiring four Kubernetes objects together - EBS CSI driver → StorageClass → PersistentVolume → PersistentVolumeClaim - and mounting the PVC into the Prometheus Deployment.
 
 
-## Part II: Container Log Collection to S3 (Old Deployment)
+## Part II: Container Log Collection to S3 (For Old EC2 Deployment o ly, no need to do this part in your k8s cluster)
 
 We collect metrics using Prometheus and visualize them in Grafana, but we also want to collect logs from the running containers. This is done by shipping logs to S3 using a tool called **Fluent Bit**.
 
