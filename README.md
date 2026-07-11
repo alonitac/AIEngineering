@@ -478,5 +478,16 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 </tr>
 
 
+<tr>
+ <td>37</td>
+ <td>Orchestration</td>
+ <td><a href="tutorials/k8s_data_persistence.md">Kubernetes data persistence</a></td>
+ <td></td>
+ <td></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
 
 </table>

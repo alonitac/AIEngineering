@@ -291,4 +291,4 @@ kubectl get pvc prometheus-pvc
 ```
 
 
-[k8s_statefulset_and_storage_summary]: https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/k8s_deployment_and_storage_summary.png
+[k8s_statefulset_and_storage_summary]: https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/k8s_statefulset_and_storage_summary.png
