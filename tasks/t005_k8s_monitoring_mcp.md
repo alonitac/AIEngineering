@@ -3,28 +3,30 @@
 
 ## Overview
 
-The PolyAI stack (Yolo, Agent, Frontend, img-proc-mcp, Prometheus, Grafana, Node Exporter) runs on EC2 via Docker Compose. This task migrates it to Kubernetes and adds observability tooling.
+Currently, your PolyAI stack runs on EC2 via Docker Compose. In this task you'll provision it to Kubernetes and add observability tooling.
 
 > [!IMPORTANT]
-> **Keep the EC2 deployment running. Don't delete it even if your cluster is up and running**. The Kubernetes cluster will be the main deployment in future tasks. Both deployments run simultaneously throughout this task.
+> **Keep the Docker compose deployment running. Don't delete your instances even if your cluster is up and running**. The Kubernetes cluster will be the main deployment in future tasks. Both deployments run simultaneously throughout this task.
 
 
 ## Part I: Deploy the stack to Kubernetes
 
-Deploy every service from your Docker Compose stack to Kubernetes in both `dev` and `prod` namespaces (`kubectl create ns dev|prod` to create a namespace in k8s). Put your Kubernetes manifests under `infra/k8s/` in your project repo.
+Deploy every service from your Docker Compose stack to Kubernetes in both `dev` and `prod` namespaces (`kubectl create ns dev|prod` to create a namespace in k8s). Put your Kubernetes YAML manifests under `infra/k8s/` in your project Git repo.
 
 > [!IMPORTANT]
 > **Use plain `Deployment` objects for every service - including Prometheus and Grafana.** Do not use Helm charts or operators for this task. The goal is to understand how Kubernetes objects connect to each other.
 
 
-Bonus - add these three to your Yolo, Agent and Frontend deployment:
+Bonus - add these three to your Yolo, Agent and Frontend deployments YAML manifests:
 
 1. **Liveness & Readiness probes** - HTTP probes to check if the service is healthy and ready.
 2. **Resource requests & limits** - CPU and memory bounds per container.
 3. **Horizontal Pod Autoscaler** - HPA targeting 50% CPU, `minReplicas: 1`, `maxReplicas: 3`. You must test the HPA by sending a load of requests to the yolo service and observing the number of replicas increase.
 
+Make sure you understand what each of these three features does and how they work.
 
-Prometheus needs durable storage so metrics survive pod restarts. This requires wiring four Kubernetes objects together - EBS CSI driver → StorageClass → PersistentVolume → PersistentVolumeClaim - and mounting the PVC into the Prometheus Deployment.
+
+In addition, Prometheus needs durable storage so metrics survive pod restarts. This requires creating a PersistentVolume and PersistentVolumeClaim for Prometheus. Use the EBS CSI driver to provision an EBS volume in AWS and mount it to the Prometheus pod. See [Kubernetes Data Persistence](../tutorials/k8s_data_persistence.md) for instructions.
 
 
 ## Part II: Container Log Collection to S3 (For Old EC2 Deployment o ly, no need to do this part in your k8s cluster)
@@ -76,7 +78,7 @@ Add this service to `docker-compose.yaml`:
 
 ```yaml
 fluent-bit:
-  image: fluent/fluent-bit:3.1
+  image: fluent/fluent-bit:4.2.7
   volumes:
     - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf:ro
     - /var/lib/docker/containers:/var/lib/docker/containers:ro
