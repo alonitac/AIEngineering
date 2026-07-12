@@ -474,7 +474,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"></td>
  <td align="center"><b>Task T005:</b> <a href="tasks/t005_k8s_monitoring_mcp.md">Preparing Kubernetes deployment, Observability, MCP Tooling</a></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1bV1_Q5u8-xW1BOJuts_jDRFSlZEvvt66/view?usp=drive_link">2026-07-09</a></td>
 </tr>
 
 
