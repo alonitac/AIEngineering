@@ -11,7 +11,11 @@ Currently, your PolyAI stack runs on EC2 via Docker Compose. In this task you'll
 
 ## Part I: Deploy the stack to Kubernetes
 
-Deploy every service from your Docker Compose stack to Kubernetes in both `dev` and `prod` namespaces (`kubectl create ns dev|prod` to create a namespace in k8s). Put your Kubernetes YAML manifests under `infra/k8s/` in your project Git repo.
+Deploy every service from your Docker Compose stack to Kubernetes (**excluding node exporter**) in both `dev` and `prod` namespaces (`kubectl create ns dev|prod` to create a namespace in k8s). Put your Kubernetes YAML manifests under `infra/k8s/` in your project Git repo.
+
+> [!IMPORTANT]
+> You can entierly skip the node exporter service deployment in Kubernetes. It is not needed for this task. We'll deploy it in a later task.
+
 
 > [!IMPORTANT]
 > **Use plain `Deployment` objects for every service - including Prometheus and Grafana.** Do not use Helm charts or operators for this task. The goal is to understand how Kubernetes objects connect to each other.
