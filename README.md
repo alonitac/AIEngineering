@@ -489,5 +489,16 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"></td>
 </tr>
 
+<tr>
+ <td>38</td>
+ <td>Orchestration</td>
+ <td><a href="tutorials/k8s_argocd.md">Continuous Deployment with ArgoCD</a></td>
+ <td></td>
+ <td></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
 
 </table>
