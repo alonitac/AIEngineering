@@ -486,7 +486,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1pke0IRKSJ0smHOcileKgkiyljjzWSRUI/view?usp=drive_link">2026-07-12</a></td>
 </tr>
 
 <tr>
