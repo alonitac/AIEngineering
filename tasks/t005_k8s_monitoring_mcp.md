@@ -21,7 +21,7 @@ Deploy every service from your Docker Compose stack to Kubernetes (**excluding n
 > **Use plain `Deployment` objects for every service - including Prometheus and Grafana.** Do not use Helm charts or operators for this task. The goal is to understand how Kubernetes objects connect to each other.
 
 
-Bonus - add these three to your Yolo, Agent and Frontend deployments YAML manifests:
+Add these three to your Yolo, Agent and Frontend deployments YAML manifests:
 
 1. **Liveness & Readiness probes** - HTTP probes to check if the service is healthy and ready.
 2. **Resource requests & limits** - CPU and memory bounds per container.
