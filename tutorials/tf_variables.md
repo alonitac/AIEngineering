@@ -164,16 +164,16 @@ terraform apply -var-file region.us-east-1.dev.tfvars
 
 How can Terraform handle sensitive data? 
 
-Let's say you want to create a secret in [AWS Secret Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html):
+A common use case for the PolyAI service is storing the **OpenAI API key** in [AWS Secrets Manager](https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html) so the application can retrieve it at runtime without ever hardcoding it:
 
 ```terraform 
-resource "aws_secretsmanager_secret" "bot_token" {
+resource "aws_secretsmanager_secret" "openai_api_key" {
   name = "<my-secret-name>"
 }
 
-resource "aws_secretsmanager_secret_version" "bot_token" {
-  secret_id     = aws_secretsmanager_secret.example.id
-  secret_string = "1234528664:AAEUHt47XsoPkQRqIBA0EYxaEGQdKtGoLtM"
+resource "aws_secretsmanager_secret_version" "openai_api_key" {
+  secret_id     = aws_secretsmanager_secret.openai_api_key.id
+  secret_string = "sk-proj-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 }
 ```
 
@@ -183,30 +183,30 @@ For that, you'll utilize [Sensitive variables](https://developer.hashicorp.com/t
 
 ```terraform 
 variable "secret_name" {
-  description = "The name of the secret"
+  description = "The name of the secret in AWS Secrets Manager"
   type        = string
   default     = "<my-secret-name>"
 }
 
 variable "secret_value" {
-  description = "The value of the secret"
+  description = "The OpenAI API key"
   type        = string
   sensitive   = true
 }
 
 
-resource "aws_secretsmanager_secret" "bot_token" {
+resource "aws_secretsmanager_secret" "openai_api_key" {
   name = var.secret_name
 }
 
-resource "aws_secretsmanager_secret_version" "bot_token" {
-  secret_id     = aws_secretsmanager_secret.example.id
+resource "aws_secretsmanager_secret_version" "openai_api_key" {
+  secret_id     = aws_secretsmanager_secret.openai_api_key.id
   secret_string = var.secret_value
 }
 ```
 
-If you were to run terraform apply now, Terraform would prompt you for value for the `aws_secretsmanager_secret_version.bot_token` variable since you haven't assigned any value.
+If you were to run terraform apply now, Terraform would prompt you for value for the `secret_value` variable since you haven't assigned any value.
 
 But sometimes you can't enter the value manually (E.g. as part of a CI/CD automation). 
-So you use the `-var` flag: `terraform apply -var="secret_value=1234528664:AAEUHt47XsoPkQRqIBA0EYxaEGQdKtGoLtM"`.
+So you use the `-var` flag: `terraform apply -var="secret_value=sk-proj-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`.
 

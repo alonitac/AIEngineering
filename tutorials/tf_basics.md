@@ -35,6 +35,14 @@ And perform the `terraform apply` command to provision the infrastructure in AWS
 
 https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started
 
+> [!TIP]
+> Install the [HashiCorp Terraform VS Code extension](https://marketplace.visualstudio.com/items?itemName=HashiCorp.terraform) for syntax highlighting, IntelliSense, and inline validation of `.tf` files.
+> 
+> Install the [HashiCorp agent skills](https://github.com/hashicorp/agent-skills) to get AI-assisted Terraform help in GitHub Copilot and other AI coding agents (code generation, module generation, provider development):
+> ```bash
+> npx skills add hashicorp/agent-skills
+> ```
+
 ## Working with Terraform in AWS
 
 Terraform creates and manages resources on cloud platforms through their APIs.
