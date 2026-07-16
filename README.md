@@ -508,7 +508,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1yPtOxhAnPhWwl9m4uPtT68NpC3oVJvJK/view?usp=sharing">2026-07-15</a></td>
 </tr>
 
 <tr>
@@ -519,7 +519,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"></td>
+ <td align="center"><a href="https://drive.google.com/file/d/1EzRI3Ltdqx4Fs-8xLGV5RULTYbBKnQ_e/view?usp=sharing">2026-07-16</a></td>
 </tr>
 
 </table>
