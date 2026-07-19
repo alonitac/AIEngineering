@@ -472,7 +472,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td><a href="tutorials/k8s_core_objects.md">Kubernetes core objects</a></td>
  <td></td>
  <td></td>
- <td align="center"></td>
+ <td align="center"><a href="tutorials/k8s_core_objects.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"><b>Task T005:</b> <a href="tasks/t005_k8s_monitoring_mcp.md">Preparing Kubernetes deployment, Observability, MCP Tooling</a></td>
  <td align="center"><a href="https://drive.google.com/file/d/1bV1_Q5u8-xW1BOJuts_jDRFSlZEvvt66/view?usp=drive_link">2026-07-09</a></td>
 </tr>
@@ -484,7 +484,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td><a href="tutorials/k8s_data_persistence.md">Kubernetes data persistence</a></td>
  <td></td>
  <td></td>
- <td align="center"></td>
+ <td align="center"><a href="tutorials/k8s_data_persistence.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
  <td align="center"><a href="https://drive.google.com/file/d/1pke0IRKSJ0smHOcileKgkiyljjzWSRUI/view?usp=drive_link">2026-07-12</a></td>
 </tr>
@@ -506,7 +506,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td><a href="tutorials/tf_basics.md">Terraform basics</a></td>
  <td></td>
  <td></td>
- <td align="center"></td>
+ <td align="center"><a href="tutorials/tf_basics.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
  <td align="center"><a href="https://drive.google.com/file/d/1yPtOxhAnPhWwl9m4uPtT68NpC3oVJvJK/view?usp=sharing">2026-07-15</a></td>
 </tr>
@@ -520,6 +520,17 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"></td>
  <td align="center"></td>
  <td align="center"><a href="https://drive.google.com/file/d/1EzRI3Ltdqx4Fs-8xLGV5RULTYbBKnQ_e/view?usp=sharing">2026-07-16</a></td>
+</tr>
+
+<tr>
+ <td>41</td>
+ <td>IaC</td>
+ <td><a href="tutorials/tf_modules.md">Terraform modules</a></td>
+ <td></td>
+ <td></td>
+ <td align="center"><a href="tutorials/tf_modules.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
 </tr>
 
 </table>
