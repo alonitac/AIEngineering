@@ -206,16 +206,17 @@ You never reconstruct chat history. You never resend the image. Everything in st
 Full working agent. The system prompt lives inside `agent_node` — the `/chat` endpoint only ever sends the current user message.
 
 ```python
-import asyncio
 import base64
 import json
 import operator
 import requests
+import uuid
+from contextlib import asynccontextmanager
 from typing import Annotated, Optional
 from typing_extensions import TypedDict
 
 import boto3
-from fastapi import FastAPI, Form, UploadFile
+from fastapi import FastAPI, Form, HTTPException, UploadFile
 from langchain.chat_models import init_chat_model
 from langchain_core.messages import SystemMessage, ToolMessage
 from langchain_core.tools import tool
@@ -227,7 +228,6 @@ from langgraph.graph.message import add_messages
 S3_BUCKET  = "my-polyai-bucket"
 s3_client  = boto3.client("s3")
 
-# ── State ──────────────────────────────────────────────────────────────────────
 
 class VisionState(TypedDict):
     messages:       Annotated[list, add_messages]
@@ -236,19 +236,16 @@ class VisionState(TypedDict):
     processed_keys: Annotated[list, operator.add]  # one S3 key per processed version
     tools_called:   Annotated[list, operator.add]
 
-# ── YOLO tool ──────────────────────────────────────────────────────────────────
 
 @tool
 def detect_objects(image_key: str) -> str:
     """Detect objects in the image stored at the given S3 key.
     Returns JSON with labels, bounding boxes, and confidence scores."""
-    img_bytes = s3_client.get_object(Bucket=S3_BUCKET, Key=image_key)["Body"].read()
     return requests.post(
         "http://localhost:8080/predict",
-        files={"file": ("image.jpg", img_bytes, "image/jpeg")},
+        json={"image_key": image_key},
     ).text
 
-# ── Router ─────────────────────────────────────────────────────────────────────
 
 def _is_object_specific(tc: dict) -> bool:
     return any(k in tc.get("args", {}) for k in ("x1", "y1", "x2", "y2", "bbox"))
@@ -266,15 +263,13 @@ def route_after_agent(state: VisionState) -> str:
         return "run_img_proc"
     return END
 
-# ── Build graph (called once at startup) ───────────────────────────────────────
 
 SYSTEM_PROMPT = SystemMessage(content=(
     "You are a vision assistant."
 ))
 
 async def build_graph():
-    client = MultiServerMCPClient({"img-proc": {"url": "http://localhost:9000/mcp", "transport": "http"}})
-    await client.__aenter__()          # keep open for the lifetime of the process
+    client         = MultiServerMCPClient({"img-proc": {"url": "http://localhost:9000/mcp", "transport": "http"}})
     mcp_tools      = await client.get_tools()
     all_tools      = [detect_objects] + mcp_tools
     tool_fn_map    = {t.name: t for t in all_tools}
@@ -323,19 +318,26 @@ async def build_graph():
     g.add_edge("run_img_proc",  "agent")
     return g.compile(checkpointer=SqliteSaver.from_conn_string("agent.db"))
 
-agent_app = asyncio.run(build_graph())
+agent_app = None
 
-# ── FastAPI ────────────────────────────────────────────────────────────────────
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global agent_app
+    agent_app = await build_graph()
+    yield
 
-api = FastAPI()
+api = FastAPI(lifespan=lifespan)
 
 @api.post("/chat")
-async def chat(message: str = Form(...), image: UploadFile = None, thread_id: str = Form(...)):
-    config = {"configurable": {"thread_id": thread_id}}
-
+async def chat(
+    message:   str        = Form(...),
+    image:     UploadFile = None,
+    thread_id: str        = Form(None),
+):
     if image:
-        # First message of this conversation — upload to S3, initialize state
-        img_key = f"uploads/{thread_id}/{image.filename}"
+        # A new image always starts a fresh conversation on a new thread.
+        new_thread_id = str(uuid.uuid4())
+        img_key = f"uploads/{new_thread_id}/{image.filename}"
         s3_client.put_object(Bucket=S3_BUCKET, Key=img_key, Body=await image.read())
         state = {
             "messages":       [{"role": "user", "content": f"{message} (image_key: {img_key})"}],
@@ -345,14 +347,20 @@ async def chat(message: str = Form(...), image: UploadFile = None, thread_id: st
             "tools_called":   [],
         }
     else:
-        # Follow-up message — checkpointer restores existing state, just append the new message
+        # Follow-up turn (text only) — keep everything that is already in state.
+        if not thread_id:
+            raise HTTPException(status_code=400, detail="thread_id is required when no image is provided")
+        new_thread_id = thread_id
         state = {"messages": [{"role": "user", "content": message}]}
 
-    result = agent_app.invoke(state, config=config)
-    return {"answer": result["messages"][-1].content, "tools_called": result["tools_called"]}
+    config = {"configurable": {"thread_id": new_thread_id}}
+    result = await agent_app.ainvoke(state, config=config)
+    return {
+        "answer":       result["messages"][-1].content,
+        "thread_id":    new_thread_id,   # client must echo this back on follow-up turns
+        "tools_called": result["tools_called"],
+    }
 ```
-
-The first `/chat` call for a `thread_id` must also pass `image_key` and the empty lists if you want them in state — or initialise the thread separately. Subsequent calls only need `message` and `thread_id`; the checkpointer replays the rest.
 
 
 ## Exercises
