@@ -38,30 +38,40 @@ The agent still gets it wrong. These are just words. **You cannot enforce a work
 
 All of these problems share a root cause: **the LLM is responsible for controlling execution.**
 
-The model looks at the conversation history and guesses the right next step. Most of the time it guesses correctly — but "most of the time" is not a guarantee.
+The model looks at the conversation history and guesses the right next step. Most of the time it guesses correctly - but "most of the time" is not a guarantee.
 
 LangGraph flips this. You define the structure. The LLM decides *what* to do. The graph decides *how execution flows*.
 
-Detection must happen before filtering? Make it a graph edge — the LLM can't reach the filter node without passing through detection first. The model no longer needs to "remember" the rule; it's physically unreachable to violate it.
+Detection must happen before filtering? Make it a graph edge - the LLM can't reach the filter node without passing through detection first. The model no longer needs to "remember" the rule; it's physically unreachable to violate it.
 
 Two kinds of requests hit the PolyAI image pipeline:
 
-- **Whole-image ops** — "rotate 90°", "flip horizontally". No detection needed.
-- **Object-specific ops** — "blur the person", "crop the dog". Require bounding boxes from YOLO first.
+- **Whole-image ops** - "rotate 90°", "flip horizontally". No detection needed.
+- **Object-specific ops** - "blur the person", "crop the dog". Require bounding boxes from YOLO first.
 
-In a chain, the LLM decides freely. Nothing stops it from calling `blur_image` on a "blur the person" request without ever running `detect_objects` — and the filter silently applies to the whole image.
+In a chain, the LLM decides freely. Nothing stops it from calling `blur_image` on a "blur the person" request without ever running `detect_objects` - and the filter silently applies to the whole image.
 
 ```mermaid
 flowchart LR
-    LLM -->|"rotate_image — whole image, fine"| MCP
-    LLM -->|"blur_image — 'blur the person', no bbox!"| MCP
+    LLM -->|"rotate_image - whole image, fine"| MCP
+    LLM -->|"blur_image - 'blur the person', no bbox!"| MCP
     LLM -->|"detect_objects"| YOLO
 ```
+
 
 
 ## Thinking in LangGraph
 
 LangGraph models an agent as a **stateful directed graph**. Building one always follows five steps.
+
+Your product team has given you these requirements for the PolyAI vision assistant:
+
+- Accept an image from the user
+- Answer questions about image content ("how many people are in this image?")
+- Apply filters to the image (whole or object-specific) - blur, rotate, flip, crop, add noise
+- Support multi-step edits in a single conversation ("now rotate it 90°")
+- Allow the user to undo or change a filter without resending the image
+- Ask for confirmation before applying destructive operations
 
 ### Step 1: Map Your Workflow as Discrete Steps
 
@@ -75,17 +85,15 @@ flowchart TD
 
     agent[agent\nLLM decision-making] --> route{route_after_agent}
 
-    route -->|"detect_objects"| detection[run_detection\nYOLO service]
-    route -->|"whole-image filter"| img_proc[run_img_proc\nMCP server]
-    route -->|"object-specific + detections ready"| img_proc
-    route -->|"object-specific + no detections"| detection
-    route -->|no tool calls| END([END])
+    route -->|detect| detection[run_detection\nYOLO service]
+    route -->|filter| img_proc[run_img_proc\nMCP server]
+    route -->|done| END([END])
 
     detection --> agent
     img_proc  --> agent
 ```
 
-Some nodes always go to the same next node (static edges). Others decide based on state (conditional edges). The router can inspect `state["detections"]` to decide which path to take — that logic lives in your code, not in a prompt.
+Some nodes always go to the same next node (static edges). Others decide based on state (conditional edges). The router can inspect `state["detections"]` to decide which path to take - that logic lives in your code, not in a prompt.
 
 ### Step 2: Identify What Each Step Needs to Do
 
@@ -178,7 +186,7 @@ def route_after_agent(state: VisionState) -> str:
         return "run_detection"
 
     if requested & IMAGE_PROC_TOOL_NAMES:
-        # Object-specific tools need detections first — enforce it in the router
+        # Object-specific tools need detections first - enforce it in the router
         if requested & OBJECT_SPECIFIC_TOOLS and not state.get("detections"):
             return "run_detection"
         return "run_img_proc"
