@@ -110,11 +110,6 @@ This tells you how to implement it and handle failures: LLM calls may need retri
 
 State is the shared notebook all nodes read from and write to. Every node receives it, does work, and returns updates.
 
-- Needs to persist across steps? → **put it in state**
-- Can be derived? → **compute on demand**
-
-**Store raw data, not formatted text.** Format prompts inside nodes.
-
 ```python
 from typing import Annotated, Optional
 from typing_extensions import TypedDict
@@ -122,14 +117,13 @@ from langgraph.graph.message import add_messages
 import operator
 
 class VisionState(TypedDict):
-    messages:           Annotated[list, add_messages]  # full conversation history
-    image_b64:          Optional[str]                  # original image - always available
-    detections:         Optional[dict]                 # YOLO output - never needs re-running
-    filtered_image_b64: Optional[str]                  # latest processed image
-    tools_called:       Annotated[list, operator.add]  # audit trail
+    messages:        Annotated[list, add_messages]  # full conversation history
+    image_key:       Optional[str]                  # S3 key of the original image
+    detections:      Optional[dict]                 # YOLO output - never needs re-running
+    processed_keys:  Annotated[list, operator.add]  # S3 keys of each processed version, newest last
+    tools_called:    Annotated[list, operator.add]  # audit trail
 ```
 
-`image_b64` stays in state forever - the original is never lost, and you never need to ask the user to resend it.
 
 ### Step 4: Build Your Nodes
 
@@ -161,158 +155,11 @@ def run_detection_node(state: VisionState) -> dict:
     }
 ```
 
-If the agent crashes after this node, the graph resumes with detections already in state - no re-running YOLO.
+Within a single run, state flows node-to-node in memory. To survive a process restart — so a crashed agent can resume here instead of re-running YOLO — you need a **checkpointer** to persist state to disk. 
 
-### Step 5: Wire It Together
+## Persistence
 
-Connect nodes with edges and compile. A **router** inspects the last message and returns the next node name:
-
-```python
-from langgraph.graph import StateGraph, START, END
-
-IMAGE_PROC_TOOL_NAMES  = {"blur_image", "crop_region", "rotate_image", "flip_image", "add_noise"}
-# These tools operate on a specific object and require bounding boxes from detection
-OBJECT_SPECIFIC_TOOLS = {"blur_image", "crop_region"}
-
-def route_after_agent(state: VisionState) -> str:
-    last = state["messages"][-1]
-
-    if not getattr(last, "tool_calls", None):
-        return END
-
-    requested = {tc["name"] for tc in last.tool_calls}
-
-    if "detect_objects" in requested:
-        return "run_detection"
-
-    if requested & IMAGE_PROC_TOOL_NAMES:
-        # Object-specific tools need detections first - enforce it in the router
-        if requested & OBJECT_SPECIFIC_TOOLS and not state.get("detections"):
-            return "run_detection"
-        return "run_img_proc"
-
-    return END
-
-graph = StateGraph(VisionState)
-
-graph.add_node("agent",         agent_node)
-graph.add_node("run_detection", run_detection_node)
-graph.add_node("run_img_proc",  run_img_proc_node)
-
-graph.add_edge(START, "agent")
-graph.add_conditional_edges("agent", route_after_agent)
-graph.add_edge("run_detection", "agent")
-graph.add_edge("run_img_proc",  "agent")
-
-app = graph.compile()
-```
-
----
-
-## The Simplest Starting Point
-
-Here's the minimal LangGraph version of the `while` loop you already know.
-
-### Install
-
-```bash
-pip install langgraph
-```
-
-### The Equivalent Graph
-
-```python
-import os
-import requests
-from langchain.chat_models import init_chat_model
-from langchain_core.tools import tool
-from langgraph.graph import StateGraph, MessagesState, START
-from langgraph.prebuilt import ToolNode, tools_condition
-
-os.environ["OPENAI_API_KEY"] = "sk-..."
-
-@tool
-def detect_objects() -> str:
-    """Detect and identify objects in the image using YOLO object detection."""
-    with open("beatles.jpeg", "rb") as f:
-        response = requests.post("http://localhost:8080/predict", files={"file": f})
-    return response.text
-
-tools = [detect_objects]
-llm = init_chat_model("openai:gpt-4o-mini")
-llm_with_tools = llm.bind_tools(tools)
-
-def agent(state: MessagesState):
-    return {"messages": [llm_with_tools.invoke(state["messages"])]}
-
-graph = StateGraph(MessagesState)
-graph.add_node("agent", agent)
-graph.add_node("tools", ToolNode(tools))           # dispatches all tool calls automatically
-
-graph.add_edge(START, "agent")
-graph.add_conditional_edges("agent", tools_condition)  # tool calls? → tools, else → END
-graph.add_edge("tools", "agent")
-
-app = graph.compile()
-
-result = app.invoke({
-    "messages": [
-        {"role": "system", "content": "You are a helpful vision assistant."},
-        {"role": "user",   "content": "How many people are in this image?"},
-    ]
-})
-print(result["messages"][-1].content)
-```
-
-Identical behavior to your manual loop - but now you have a structure you can extend without rewriting the core.
-
-Visualize it at any time:
-
-```python
-from IPython.display import Image, display
-display(Image(app.get_graph().draw_mermaid_png()))
-```
-
-```mermaid
-flowchart LR
-    START([START]) --> agent[agent]
-    agent -->|tool calls| tools[tools]
-    agent -->|no tool calls| END([END])
-    tools --> agent
-```
-
----
-
-## What Changes When You Use a Graph
-
-| Problem | Chain | Graph |
-|---|---|---|
-| Agent skips a required step | Happens - prompt rules don't prevent it | Impossible - the edge doesn't exist |
-| Crash mid-execution | Start over from scratch | Resume from last checkpoint |
-| "Undo" a filter | Original image lost, user must resend | `state["image_b64"]` always available |
-| Pause for human approval | Not possible | `interrupt()` - pauses indefinitely |
-| Complex conditional routing | LLM must figure it out | You define it in the router |
-
----
-
-## Streaming and Persistence
-
-**Stream** intermediate updates as nodes run:
-
-```python
-for chunk in app.stream(initial_state, stream_mode="updates"):
-    node_name = list(chunk.keys())[0]
-    print(f"[{node_name}] updated: {list(chunk[node_name].keys())}")
-```
-
-```
-[agent]         updated: ['messages']
-[run_detection] updated: ['messages', 'detections', 'tools_called']
-[agent]         updated: ['messages']
-[run_img_proc]  updated: ['messages', 'filtered_image_b64', 'tools_called']
-```
-
-**Persist** state across requests:
+By default each `app.invoke()` is stateless — the graph starts fresh. Attach a checkpointer and every call with the same `thread_id` shares history.
 
 ```bash
 pip install langgraph-checkpoint-sqlite
@@ -324,74 +171,193 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 checkpointer = SqliteSaver.from_conn_string("agent_memory.db")
 app = graph.compile(checkpointer=checkpointer)
 
+# thread_id ties all turns of one conversation together
 config = {"configurable": {"thread_id": "user-42"}}
 
-app.invoke(initial_state,                                                    config=config)
-app.invoke({"messages": [{"role": "user", "content": "Now rotate it 90°"}]}, config=config)
+# Turn 1 — upload image to S3, store the key, send first request
+import boto3
+s3 = boto3.client("s3")
+s3.upload_file("beatles.jpeg", "my-bucket", "images/original.jpg")
+
+result = app.invoke(
+    {
+        "messages":       [{"role": "user", "content": "Blur all the people. (image_key: images/original.jpg)"}],
+        "image_key":      "images/original.jpg",
+        "processed_keys": [],
+    },
+    config=config,
+)
+print(result["messages"][-1].content)
+
+# Turn 2 — no need to resend the image; the checkpointer replays the full state
+result = app.invoke(
+    {"messages": [{"role": "user", "content": "Now rotate it 90°"}]},
+    config=config,
+)
+print(result["messages"][-1].content)
 ```
 
-The second call picks up where the first left off - no resending state.
+The first `invoke` call passes the full initial state. Every subsequent call in the same thread only needs the new message — the checkpointer reloads the full saved state and merges your new message in using the `add_messages` reducer.
 
----
+You never reconstruct chat history. You never resend the image. Everything in state — `image_key`, `detections`, `processed_keys`, all past messages — is already there.
+
+## Putting It Together
+
+Full working agent. The system prompt lives inside `agent_node` — the `/chat` endpoint only ever sends the current user message.
+
+```python
+import asyncio
+import base64
+import json
+import operator
+import requests
+from typing import Annotated, Optional
+from typing_extensions import TypedDict
+
+import boto3
+from fastapi import FastAPI, Form, UploadFile
+from langchain.chat_models import init_chat_model
+from langchain_core.messages import SystemMessage, ToolMessage
+from langchain_core.tools import tool
+from langchain_mcp_adapters.client import MultiServerMCPClient
+from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.graph import StateGraph, START, END
+from langgraph.graph.message import add_messages
+
+S3_BUCKET  = "my-polyai-bucket"
+s3_client  = boto3.client("s3")
+
+# ── State ──────────────────────────────────────────────────────────────────────
+
+class VisionState(TypedDict):
+    messages:       Annotated[list, add_messages]
+    image_key:      Optional[str]
+    detections:     Optional[dict]
+    processed_keys: Annotated[list, operator.add]  # one S3 key per processed version
+    tools_called:   Annotated[list, operator.add]
+
+# ── YOLO tool ──────────────────────────────────────────────────────────────────
+
+@tool
+def detect_objects(image_key: str) -> str:
+    """Detect objects in the image stored at the given S3 key.
+    Returns JSON with labels, bounding boxes, and confidence scores."""
+    img_bytes = s3_client.get_object(Bucket=S3_BUCKET, Key=image_key)["Body"].read()
+    return requests.post(
+        "http://localhost:8080/predict",
+        files={"file": ("image.jpg", img_bytes, "image/jpeg")},
+    ).text
+
+# ── Router ─────────────────────────────────────────────────────────────────────
+
+def _is_object_specific(tc: dict) -> bool:
+    return any(k in tc.get("args", {}) for k in ("x1", "y1", "x2", "y2", "bbox"))
+
+def route_after_agent(state: VisionState) -> str:
+    last = state["messages"][-1]
+    if not getattr(last, "tool_calls", None):
+        return END
+    requested = {tc["name"] for tc in last.tool_calls}
+    if "detect_objects" in requested:
+        return "run_detection"
+    if requested - {"detect_objects"}:
+        if any(_is_object_specific(tc) for tc in last.tool_calls) and not state.get("detections"):
+            return "run_detection"
+        return "run_img_proc"
+    return END
+
+# ── Build graph (called once at startup) ───────────────────────────────────────
+
+SYSTEM_PROMPT = SystemMessage(content=(
+    "You are a vision assistant."
+))
+
+async def build_graph():
+    client = MultiServerMCPClient({"img-proc": {"url": "http://localhost:9000/mcp", "transport": "http"}})
+    await client.__aenter__()          # keep open for the lifetime of the process
+    mcp_tools      = await client.get_tools()
+    all_tools      = [detect_objects] + mcp_tools
+    tool_fn_map    = {t.name: t for t in all_tools}
+    llm_with_tools = init_chat_model("openai:gpt-4o-mini").bind_tools(all_tools)
+
+    def agent_node(state):
+        return {"messages": [llm_with_tools.invoke([SYSTEM_PROMPT] + state["messages"])]}
+
+    def run_detection_node(state):
+        last, results, detections = state["messages"][-1], [], None
+        for tc in last.tool_calls:
+            if tc["name"] == "detect_objects":
+                raw = detect_objects.invoke(tc)
+                results.append(ToolMessage(content=raw, tool_call_id=tc["id"]))
+                try: detections = json.loads(raw)
+                except json.JSONDecodeError: detections = {"raw": raw}
+        return {"messages": results, "detections": detections, "tools_called": ["detect_objects"]}
+
+    def run_img_proc_node(state):
+        last, results, new_key, called = state["messages"][-1], [], None, []
+        # Fetch the current image from S3 (latest processed version, or original)
+        current_key = state["processed_keys"][-1] if state["processed_keys"] else state["image_key"]
+        img_bytes = s3_client.get_object(Bucket=S3_BUCKET, Key=current_key)["Body"].read()
+        img_b64   = base64.b64encode(img_bytes).decode()
+        for tc in last.tool_calls:
+            if fn := tool_fn_map.get(tc["name"]):
+                tc["args"]["image_b64"] = img_b64   # MCP tools expect image_b64
+                result_b64 = fn.invoke(tc)
+                # Upload result back to S3
+                new_key = f"processed/{tc['name']}_{len(state['processed_keys'])}.png"
+                s3_client.put_object(Bucket=S3_BUCKET, Key=new_key, Body=base64.b64decode(result_b64))
+                results.append(ToolMessage(content=f"Done. Result stored at {new_key}", tool_call_id=tc["id"]))
+                called.append(tc["name"])
+        update = {"messages": results, "tools_called": called}
+        if new_key:
+            update["processed_keys"] = [new_key]
+        return update
+
+    g = StateGraph(VisionState)
+    g.add_node("agent",         agent_node)
+    g.add_node("run_detection", run_detection_node)
+    g.add_node("run_img_proc",  run_img_proc_node)
+    g.add_edge(START, "agent")
+    g.add_conditional_edges("agent", route_after_agent)
+    g.add_edge("run_detection", "agent")
+    g.add_edge("run_img_proc",  "agent")
+    return g.compile(checkpointer=SqliteSaver.from_conn_string("agent.db"))
+
+agent_app = asyncio.run(build_graph())
+
+# ── FastAPI ────────────────────────────────────────────────────────────────────
+
+api = FastAPI()
+
+@api.post("/chat")
+async def chat(message: str = Form(...), image: UploadFile = None, thread_id: str = Form(...)):
+    config = {"configurable": {"thread_id": thread_id}}
+
+    if image:
+        # First message of this conversation — upload to S3, initialize state
+        img_key = f"uploads/{thread_id}/{image.filename}"
+        s3_client.put_object(Bucket=S3_BUCKET, Key=img_key, Body=await image.read())
+        state = {
+            "messages":       [{"role": "user", "content": f"{message} (image_key: {img_key})"}],
+            "image_key":      img_key,
+            "detections":     None,
+            "processed_keys": [],
+            "tools_called":   [],
+        }
+    else:
+        # Follow-up message — checkpointer restores existing state, just append the new message
+        state = {"messages": [{"role": "user", "content": message}]}
+
+    result = agent_app.invoke(state, config=config)
+    return {"answer": result["messages"][-1].content, "tools_called": result["tools_called"]}
+```
+
+The first `/chat` call for a `thread_id` must also pass `image_key` and the empty lists if you want them in state — or initialise the thread separately. Subsequent calls only need `message` and `thread_id`; the checkpointer replays the rest.
+
 
 ## Exercises
 
-### :pencil2: Visualize Your Graph
-
-```python
-png_bytes = app.get_graph(xray=True).draw_mermaid_png()
-with open("graph.png", "wb") as f:
-    f.write(png_bytes)
-```
-
-`xray=True` expands sub-graphs like `ToolNode`.
-
----
-
-### :pencil2: Iteration Guard
-
-Add a guard - LangGraph has no built-in iteration limit:
-
-```python
-def route_after_agent(state: VisionState) -> str:
-    if state.get("iteration_count", 0) >= 10:
-        return END
-    ...
-```
-
----
-
-### :pencil2: Human-in-the-Loop
-
-LangGraph can pause before a node and wait for human approval:
-
-```python
-app = graph.compile(
-    checkpointer=checkpointer,
-    interrupt_before=["run_img_proc"],
-)
-```
-
-The graph pauses when the LLM requests a filter. Inspect, approve, and resume:
-
-```python
-app.invoke(initial_state, config=config)       # runs until interrupt
-
-pending = app.get_state(config).next
-print("About to run:", pending)
-
-app.invoke(None, config=config)                # resume
-```
-
-In your `/chat` endpoint: when the agent requests a destructive operation, respond `202 Accepted` and wait for frontend confirmation before resuming.
-
----
-
 ### :pencil2: Migrate the Agent Service
 
-Update `services/agent/app.py` to use LangGraph. The `/chat` endpoint stays the same from the outside - only the internals change.
+Use the [Superpowers brainstorming skill](https://github.com/obra/superpowers) to spec and plan the migration of `services/agent/app.py` from the manual `run_agent` loop to LangGraph, then use the [writing-plans skill](https://github.com/obra/superpowers) to produce a step-by-step implementation plan before touching any code.
 
-Make sure:
-- `AgentResponse` still includes `tools_called`, `iterations`, `annotated_image`, and `agent_loop_time_s`
-- `tools_called` comes from `result["tools_called"]` in the final graph state
-- Existing tests still pass (mock `app.invoke` instead of `run_agent`)
