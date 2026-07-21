@@ -369,3 +369,4 @@ async def chat(
 
 Use the [Superpowers brainstorming skill](https://github.com/obra/superpowers) to spec and plan the migration of `services/agent/app.py` from the manual `run_agent` loop to LangGraph, then use the [writing-plans skill](https://github.com/obra/superpowers) to produce a step-by-step implementation plan before touching any code.
 
+Integrate [Langraph docs mcp](https://docs.langchain.com/use-these-docs) in your `.vscode/mcp.json` to help your coding agent implement the plan properly.
