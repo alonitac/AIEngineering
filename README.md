@@ -502,6 +502,17 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 
 <tr>
  <td>39</td>
+ <td>Orchestration</td>
+ <td><a href="tutorials/k8s_pod_design.md">Kubernetes pod design</a></td>
+ <td></td>
+ <td></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
+<tr>
+ <td>40</td>
  <td>IaC</td>
  <td><a href="tutorials/tf_basics.md">Terraform basics</a></td>
  <td></td>
@@ -512,7 +523,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 </tr>
 
 <tr>
- <td>40</td>
+ <td>41</td>
  <td>IaC</td>
  <td><a href="tutorials/tf_variables.md">Terraform variables</a></td>
  <td></td>
@@ -523,7 +534,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 </tr>
 
 <tr>
- <td>41</td>
+ <td>42</td>
  <td>IaC</td>
  <td><a href="tutorials/tf_modules.md">Terraform modules</a></td>
  <td></td>
@@ -535,7 +546,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
 
 
 <tr>
- <td>41</td>
+ <td>43</td>
  <td>AI</td>
  <td><a href="tutorials/ai_langgraph.md">LangGraph</a></td>
  <td></td>
