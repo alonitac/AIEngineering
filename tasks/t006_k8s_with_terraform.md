@@ -27,11 +27,14 @@ infra/tf/
 └── variables.tf
 ```
 
-Create a `modules/k8s-cluster` local Terraform module. Inside it, provision:
-
 ### VPC
 
 A VPC with **2 public subnets in different Availability Zones**. All instances go into these subnets. For that, use [the VPC module taught in class ](https://registry.terraform.io/modules/terraform-aws-modules/vpc/aws/latest).
+
+---
+
+Create a `modules/k8s-cluster` local Terraform module. Inside it, provision:
+
 
 ### Control plane
 
