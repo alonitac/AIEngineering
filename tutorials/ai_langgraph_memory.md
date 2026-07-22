@@ -163,3 +163,10 @@ A user applies 15 sequential filters in one session. By the end the messages lis
 2. After trimming, confirm the agent still applies filters correctly - `image_key`, `detections`, and `processed_keys` live in graph state (restored by the checkpointer), not in the messages list. Trimming messages does not lose them.
 
 3. Test with a thread that has 20+ turns. Measure the token count before and after trimming.
+
+
+### :pencil2: Human Approval with Interrupts
+
+Interrupts pause graph execution mid-node and wait for external input before continuing. LangGraph saves the full graph state at the pause point (via the checkpointer) and resumes exactly where it left off once you provide a response.
+
+Read the [LangGraph interrupts docs](https://docs.langchain.com/oss/python/langgraph/interrupts), then add a human-approval gate to the PolyAI agent so the user must confirm before any destructive tool (blur, crop, remove watermark) is executed.
