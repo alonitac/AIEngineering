@@ -86,9 +86,14 @@ After `terraform apply`, the control plane is already initialized. Run these rem
 
 Create two GitHub Actions workflows:
 
-**Pipeline 1 - Provision** (`.github/workflows/tf-provision.yaml`): runs `terraform apply` when files under `infra/tf/` change. Should be triggered on pushes to `main` only (as we use a single cluster for both dev and prod).
+`.github/workflows/cluster.yaml` — triggered **manually** (use `workflow_dispatch` in the workflow YAML, with a `region` input). Two sequential jobs:
+1. **Provision** — runs `terraform apply` for the selected region.
+2. **Bootstrap** — SSHs into the control plane and **idempotently** installs Calico, ArgoCD, and the ArgoCD `Application` per microservice. Use `terraform output` to get the control plane IP.
 
-**Pipeline 2 - Bootstrap** (`.github/workflows/bootstrap-cluster.yaml`): SSHs into the control plane and runs the bootstrap sequence from Part II (Calico, ArgoCD, ArgoCD Application). **Make it idempotent**. You can get the control plane public ip by using the `terraform output` command in the workflow. This workflow should run on pushes to `main` only, and only after the Provision pipeline has completed successfully.
+`.github/workflows/cd.yaml` — triggered on push to `dev` and `main`. Updates the image tag for the changed service and commits the change back to the repo so ArgoCD picks it up and deploys the updated service.
 
 > [!NOTE]
-> After ArgoCD is up and the `Application` is created, ArgoCD handles all workload deployments. The bootstrap pipeline runs once per cluster lifetime.
+> After ArgoCD is up and the `Application` is created, ArgoCD handles all workload deployments. The bootstrap job runs once per cluster lifetime.
+
+> [!NOTE]
+> The best way to test your work is to `terraform destroy`, then re-run the `cluster.yaml` workflow to recreate everything from scratch. If that succeeds, your work is complete.
