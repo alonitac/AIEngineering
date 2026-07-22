@@ -103,7 +103,7 @@ Write automated tests for your project. Provide a clear **test plan** document (
 
 The following ideas are meant to inspire you. You are free to implement any of them or invent your own.
 
-[Common MCP servers](https://github.com/punkpeye/awesome-mcp-servers).
+[Awesome MCP servers](https://github.com/punkpeye/awesome-mcp-servers) or [MCP Servers](https://mcpservers.org/)
 
 ### DevOps Incident Response Agent
 
