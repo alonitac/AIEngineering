@@ -540,7 +540,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td></td>
  <td align="center"><a href="tutorials/tf_modules.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
- <td align="center"></td>
+ <td align="center"><b>Task T006:</b> <a href="tasks/t006_k8s_with_terraform.md">Preparing Kubernetes deployment with Terraform</a></td>
  <td align="center"></td>
 </tr>
 
