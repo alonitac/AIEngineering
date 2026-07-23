@@ -556,6 +556,16 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"></td>
 </tr>
 
+<tr>
+ <td>44</td>
+ <td>AI</td>
+ <td><a href="tutorials/ai_langgraph_memory.md">Memory management in LangGraph</a></td>
+ <td></td>
+ <td></td>
+ <td align="center"><a href="tutorials/ai_langgraph_memory.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
 
 
 
