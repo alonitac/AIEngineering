@@ -578,6 +578,16 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"></td>
 </tr>
 
+<tr>
+ <td>46</td>
+ <td>Orchestration</td>
+ <td><a href="tutorials/k8s_ingres_controller.md">Expose your service to the world with Nginx Ingress controller and Elastic Load Balancer (ELB)</a></td>
+ <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/slides/aws_elb_asg.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/slides.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"><a href="tutorials/k8s_ingres_controller.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
 
 
 </table>
