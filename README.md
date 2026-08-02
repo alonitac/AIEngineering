@@ -596,7 +596,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"></td>
  <td align="center"></td>
  <td align="center"><a href="tutorials/k8s_helm.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
- <td align="center"></td>
+ <td align="center"><b>Task T007:</b> <a href="tasks/t007_k8s_ingress_monitoring.md"> Exposing the Cluster and Monitoring</a></td>
  <td align="center"></td>
 </tr>
 
