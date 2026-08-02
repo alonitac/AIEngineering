@@ -15,18 +15,18 @@ Besides calling the Yolo service, there are a few more microservices in the syst
 In a **naive** approach, the agent service could directly send HTTP requests to each of these microservices with the event information:
 
 ```
-                              ┌──────────────┐
-                         ┌───►│     yolo     │
-                         │    └──────────────┘
-                         │    ┌──────────────┐
-┌──────────┐  ┌───────┐  ├───►│   metering   │
-│ frontend │─►│ agent │──┤    └──────────────┘
-└──────────┘  └───────┘  │    ┌──────────────┐
-                         ├───►│  analytics   │
-                         │    └──────────────┘
-                         │    ┌──────────────┐
-                         └───►│   security   │
-                              └──────────────┘
+                ┌──────────────┐
+           ┌───►│     yolo     │
+           │    └──────────────┘
+           │    ┌──────────────┐
+┌───────┐  ├───►│   metering   │
+│ agent │──┤    └──────────────┘
+└───────┘  │    ┌──────────────┐
+           ├───►│  analytics   │
+           │    └──────────────┘
+           │    ┌──────────────┐
+           └───►│   security   │
+                └──────────────┘
 ```
 
 However, this **synchronous communication** pattern introduces several challenges:
@@ -39,10 +39,10 @@ However, this **synchronous communication** pattern introduces several challenge
 To address these issues, we can introduce a **message broker system**: 
 
 ```
-┌──────────┐  ┌───────┐  produce   ┌────────────────────┐  consume   ┌──────────┐
-│ frontend │─►│ agent │───────────►│ queue userMessage  │───────────►│   yolo   │
-└──────────┘  └───────┘            └────────────────────┘            │   (xN)   │
-                                                                     └──────────┘
+┌───────┐  produce   ┌────────────────────┐  consume   ┌──────────┐
+│ agent │───────────►│ queue userMessage  │───────────►│   yolo   │
+└───────┘            └────────────────────┘            │   (xN)   │
+                                                       └──────────┘
 ```
 
 The agent service **produce** the `userMessage` event to a **queue**.
