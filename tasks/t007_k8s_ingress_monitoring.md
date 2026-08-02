@@ -2,7 +2,7 @@
 
 ## Overview
 
-Your cluster from [T007](t007_k8s_deployment.md) is provisioned by Terraform and synced by ArgoCD, but the PolyAI stack is still reachable only via `kubectl port-forward`.
+Your cluster from previous task is provisioned by Terraform and synced by ArgoCD, but the PolyAI stack is still reachable only via `kubectl port-forward`.
 
 In this task you'll:
 
