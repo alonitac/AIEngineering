@@ -4,13 +4,7 @@
 
 Your cluster from previous task is provisioned by Terraform and synced by ArgoCD, but the PolyAI stack is still reachable only via `kubectl port-forward`.
 
-In this task you'll:
-
-1. Expose the stack to the internet through an **Nginx Ingress Controller**, an **Application Load Balancer**, and a **Route 53** domain.
-2. Replace the hand-written Prometheus and Grafana Deployments with the **kube-prometheus-stack** Helm chart.
-3. Route **Alertmanager** alerts to your mailbox through an **SNS** topic, and simulate a firing alert.
-4. **Bonus**: install the **Cluster Autoscaler** so the ASG scales nodes automatically.
-
+In this task you'll expose the stack to the internet, and set up production-grade monitoring and alerting with Prometheus, Grafana and Alertmanager.
 
 
 > [!NOTE]
