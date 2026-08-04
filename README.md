@@ -612,4 +612,15 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"><a href="https://drive.google.com/file/d/1uZTOTeUC_9613NkXIhGzKS8McIyvFNce/view?usp=sharing">2026-08-02</a></td>
 </tr>
 
+<tr>
+ <td>49</td>
+ <td>AI</td>
+ <td><a href="tutorials/ai_langfuse.md">Agent observability with Langfuse</a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
 </table>

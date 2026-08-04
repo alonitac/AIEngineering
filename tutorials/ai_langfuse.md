@@ -216,7 +216,6 @@ Instrument the PolyAI vision agent (`services/agent/app.py`) with Langfuse:
 
 Send a multi-step request (*"blur the person, then rotate 90°"*) and verify in the UI that you see one session, several traces, and the tool calls nested under the agent node.
 
----
 
 ### :pencil2: Cost per Conversation
 
@@ -228,7 +227,6 @@ Using the Langfuse dashboard, find:
 
 Then reduce the cost of that trace - trim the system prompt, or stop sending the full conversation history on every turn - and compare the traces before and after.
 
----
 
 ### :pencil2: User Feedback as a Score
 
@@ -240,7 +238,6 @@ langfuse.create_score(trace_id=trace_id, name="user-feedback", value=rating)
 
 Return the `trace_id` from `/chat` so the client can echo it back. Then filter traces by low scores in the UI - that's your debugging queue.
 
----
 
 ### :pencil2: Langfuse Skills
 
