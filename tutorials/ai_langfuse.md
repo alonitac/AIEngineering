@@ -205,6 +205,22 @@ Open a trace and you can answer the question we started with: which node ran, wh
 
 ## Exercises
 
+### :pencil2: Langfuse Skills
+
+Install the official Langfuse agent skills:
+
+```bash
+npx skills add langfuse/skills --skill "langfuse"
+```
+
+Then ask your coding agent:
+
+```text
+Add tracing to this application with Langfuse following best practices.
+```
+
+Review the diff carefully - compare what the agent produced against the instrumentation you wrote by hand.
+
 ### :pencil2: Trace Your Agent
 
 Instrument the PolyAI vision agent (`services/agent/app.py`) with Langfuse:
@@ -238,21 +254,7 @@ langfuse.create_score(trace_id=trace_id, name="user-feedback", value=rating)
 Return the `trace_id` from `/chat` so the client can echo it back. Then filter traces by low scores in the UI - that's your debugging queue.
 
 
-### :pencil2: Langfuse Skills
 
-Install the official Langfuse agent skills:
-
-```bash
-npx skills add langfuse/skills --skill "langfuse"
-```
-
-Then ask your coding agent:
-
-```text
-Add tracing to this application with Langfuse following best practices.
-```
-
-Review the diff carefully - compare what the agent produced against the instrumentation you wrote by hand.
 
 
 [ai_langfuse_arch]: https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/langfuse_arch.png 
