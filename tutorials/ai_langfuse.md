@@ -112,7 +112,6 @@ class State(TypedDict):
 llm = init_chat_model(
     "us.anthropic.claude-haiku-4-5-20251001-v1:0",
     model_provider="bedrock_converse",
-    credentials_profile_name="655",
     region_name="us-east-1",
 )
 
