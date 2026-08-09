@@ -623,4 +623,16 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"></td>
 </tr>
 
+
+<tr>
+ <td>50</td>
+ <td>AWS</td>
+ <td><a href="tutorials/aws_eks.md">Amazon EKS</a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
 </table>
