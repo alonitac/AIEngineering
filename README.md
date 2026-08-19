@@ -648,4 +648,15 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"></td>
 </tr>
 
+<tr>
+ <td>52</td>
+ <td>AI</td>
+ <td><a href="tutorials/ai_costs.md">AI costs</a></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+ <td align="center"></td>
+</tr>
+
 </table>
