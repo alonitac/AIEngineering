@@ -120,16 +120,21 @@ AWS_REGION=us-east-1
 
 ### Give the container your AWS credentials
 
-LightRAG runs in a container, and a container has no `~/.aws`. Mount yours in read-only by creating `docker-compose.override.yml` next to `docker-compose.yml`:
+LightRAG has some limitation reading your `~/.aws/credentials` file, even when mounted properly. The easiest way to give it credentials is to export them as environment variables (**without copy & pasting your secret keys into the `.env` file**):
+
+```bash 
+export $(aws configure export-credentials --profile default --format env-no-export | xargs)
+```
+
+Then add the following to `docker-compose.yml`:
 
 ```yaml
 services:
   lightrag:
-    volumes:
-      - ~/.aws:/root/.aws:ro
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
 ```
-
-Compose merges this file automatically.
 
 ### Run it
 
