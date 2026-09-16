@@ -1,6 +1,6 @@
 <div align="center">
 
-# ♾️ DevOps and AI Engineering - Fursa 2026
+# ♾️ DevOps and AI Engineering - OzVaruach 2026
 
 
 </div>
