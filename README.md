@@ -1,6 +1,6 @@
 <div align="center">
 
-# ♾️ DevOps and AI Engineering - OzVaruach 2026
+# ♾️ AI Engineering - OzVaruach 2026
 
 
 </div>
