@@ -43,7 +43,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td>&nbsp;</td>
  <td>&nbsp;</td>
  <td>&nbsp;</td>
- <td align="center"><a href="https://drive.google.com/file/d/1Bws4lXDpRibT1lO4ljAn2dSp3kbMpKrB/view?usp=sharing">2026-06-01</a></td>
+ <td align="center"></td>
 
 </tr>	
 
@@ -66,7 +66,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/http_and_api.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/http_protocol.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1I1Z3dR2wFk6EJuI8kk2x6DUa57WPTkg8/view?usp=sharing">2026-06-04</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -140,7 +140,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://alonitac.github.io/DevOpsTheHardWay/multichoice-questions/linux_processes.html"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/linux_processes.md#exercises"><img src="https://alonitac.github.io/DevOpsTheHardWay/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1GzeJRsXrZsRqYlXOs9CLDxJ02ikLg8UR/view?usp=drivesdk">2026-06-09</a></td>
+ <td align="center"></td>
 
 </tr>
 
@@ -225,7 +225,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/fursa_aws_intro.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/aws_intro.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"><b>Task T002:</b> <a href="tasks/t002_yolo_cicd_workflow.md">Yolo multi-env deployment in AWS</a></td>
- <td align="center"><a href="https://drive.google.com/file/d/1ga6PTpg160D15fF1OwDzTmRvnrjlOkj4/view?usp=drivesdk">2026-06-11</a></td>
+ <td align="center"></td>
 
 
 
@@ -241,7 +241,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_computer_nets.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/networking_computer_networks.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1cEcyB-OcrpIuxiWrJQY9GoCKwJE9LSyj/view?usp=sharing">2026-06-14</a></td>
+ <td align="center"></td>
 
 </tr>
 
@@ -285,7 +285,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_security.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/networking_security.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1Qbtyn3zxaryLeBIdCs6Wcv5XHtI0s4vM/view?usp=sharing">2026-06-16</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -307,7 +307,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/networking_dns.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/networking_dns.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1tUc3SDfNLlqsY7O21-3TkXdcR9z6F-o6/view?usp=sharing">2026-06-17</a></td>
+ <td align="center"></td>
 </tr>
 
 
@@ -331,7 +331,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"></td>
  <td align="center"><a href="tutorials/ai_agent_skills.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"><b>Task T003:</b> <a href="tasks/t003_data_modeling_refactor_skills.md">Yolo API data layer refactor with skills</a></td>
- <td align="center"><a href="https://drive.google.com/file/d/1m52BEIFSSw-YpLq9vCQuvFqSHNxM9A2i/view?usp=sharing">2026-06-18</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -342,7 +342,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"></td>
  <td align="center"><a href="tutorials/ai_langgraph_intro.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1IJ4IVqU8bqSpM91XeEwmUN6JsekKW3nF/view?usp=sharing">2026-06-21</td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -364,7 +364,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/aws_iam_bedrock.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1x0_C9nJCihxk_GLDMaUHmld2D6kpgeH1/view?usp=sharing">2026-06-24</a></td>
+ <td align="center"></td>
 </tr>
 
 
@@ -376,7 +376,7 @@ Please complete the Onboarding tutorial **before the course begins (01/06/26)**:
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/aws_s3.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/aws_s3.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1xiq_-gUZvQVpDDEkqxlG0Lj_Ad5z46-0/view?usp=sharing">2026-06-25</a></td>
+ <td align="center"></td>
 
 </tr>
 
@@ -391,7 +391,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/docker_containers.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/docker_containers.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1X10hxGqJ65NgK78qk2K2ihLCSOIaGHnX/view?usp=sharing">2026-06-28</a></td>
+ <td align="center"></td>
 
 </tr>
 
@@ -404,7 +404,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/docker_images.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/docker_images.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1WuaotrHlnkr-SWnBlmmEA1d6X1dgjb-x/view?usp=sharing">2026-06-30</a></td>
+ <td align="center"></td>
 </tr>
 
 
@@ -416,7 +416,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/bgu_docker_packet_flow.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"><a href="tutorials/docker_network_volumes.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1W7gdufyttigBTZR1qNsGhgKaipn7y-2Z/view?usp=sharing">2026-07-01</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -427,7 +427,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"></td>
  <td align="center"><b>Task T004:</b> <a href="tasks/t004_agent_observability_containerization.md">MCP, observability, containerization</a></td>
- <td align="center"><a href="https://drive.google.com/file/d/1g9WTFHiAG1kNJrBNofi303weNHekp5mK/view?usp=sharing">2026-07-02</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -450,7 +450,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1v-9JJWik0JLgOQrMfa3zOKD7KQ4Ge3li/view?usp=sharing">2026-07-05</a></td>
+ <td align="center"></a></td>
 </tr>
 
 
@@ -462,7 +462,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td><a href="tutorials/k8s_cluster_setup.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1u12gY0vevn1k_G_A_HFRkUCe2WFsaVn7/view?usp=sharing">2026-07-07</a></td>
+ <td align="center"></td>
 </tr>
 
 
@@ -474,7 +474,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"><a href="tutorials/k8s_core_objects.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"><b>Task T005:</b> <a href="tasks/t005_k8s_monitoring_mcp.md">Preparing Kubernetes deployment, Observability, MCP Tooling</a></td>
- <td align="center"><a href="https://drive.google.com/file/d/1bV1_Q5u8-xW1BOJuts_jDRFSlZEvvt66/view?usp=drive_link">2026-07-09</a></td>
+ <td align="center"></td>
 </tr>
 
 
@@ -486,7 +486,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"><a href="tutorials/k8s_data_persistence.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1pke0IRKSJ0smHOcileKgkiyljjzWSRUI/view?usp=drive_link">2026-07-12</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -519,7 +519,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"><a href="tutorials/tf_basics.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1yPtOxhAnPhWwl9m4uPtT68NpC3oVJvJK/view?usp=sharing">2026-07-15</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -530,7 +530,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1EzRI3Ltdqx4Fs-8xLGV5RULTYbBKnQ_e/view?usp=sharing">2026-07-16</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -541,7 +541,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"><a href="tutorials/tf_modules.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"><b>Task T006:</b> <a href="tasks/t006_k8s_with_terraform.md"> Kubernetes deployment with Terraform</a></td>
- <td align="center"><a href="https://drive.google.com/file/d/1gLye4119IjhMFgbzhwtlZvYdEPyq8o5K/view?usp=sharing">2026-07-19</a></td>
+ <td align="center"></td>
 </tr>
 
 
@@ -553,7 +553,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"><a href="tutorials/ai_langgraph.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1CMw99HyNZf_5NE3YlT2f8nciTc8AGZC_/view?usp=sharing">2026-07-21</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -564,7 +564,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td></td>
  <td align="center"><a href="tutorials/ai_langgraph_memory.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1bUmflHORCa1kzOD2IQI8UWLL-uInjYpa/view?usp=sharing">2026-07-23</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -586,7 +586,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"></td>
  <td align="center"><a href="tutorials/k8s_ingress_controller.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1G3a80jk8_Bhl2pTwEx_fiyCcTdSkTVIv/view?usp=sharing">2026-07-28</a> <br><a href="https://drive.google.com/file/d/1m-so-MtJUuTvUi966LRO__Rkv7uCJicx/view?usp=sharing">2026-07-29</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
@@ -597,7 +597,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"></td>
  <td align="center"><a href="tutorials/k8s_helm.md#exercises"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/pen.png" /></a></td>
  <td align="center"><b>Task T007:</b> <a href="tasks/t007_k8s_ingress_monitoring.md"> Exposing the Cluster and Monitoring</a></td>
- <td align="center"><a href="https://drive.google.com/file/d/17JV4BEOjBTDUnYiWHSJ6prCscv7i_xi7/view?usp=sharing">2026-07-30</a></td>
+ <td align="center"></td>
 </tr>
 
 
@@ -609,7 +609,7 @@ academy.github.io/DevOpsTheHardWayAssets/slides/bgu_docker_intro.html"><img src=
  <td align="center"><a target="_blank" href="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/multichoice-questions/aws_sqs_sns.html"><img src="https://exit-zero-academy.github.io/DevOpsTheHardWayAssets/img/qm.png" /></a></td>
  <td align="center"></td>
  <td align="center"></td>
- <td align="center"><a href="https://drive.google.com/file/d/1uZTOTeUC_9613NkXIhGzKS8McIyvFNce/view?usp=sharing">2026-08-02</a></td>
+ <td align="center"></td>
 </tr>
 
 <tr>
